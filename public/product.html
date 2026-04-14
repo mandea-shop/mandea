@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mandea — Produktdetails">
+  <title>Produkt — Mandea</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/product.css">
+</head>
+<body>
+
+  <!-- ── NAVIGATION ── -->
+  <header class="navbar" role="banner">
+    <div class="container navbar__inner">
+      <a href="/" class="navbar__logo">Man<span>dea</span></a>
+      <nav class="navbar__nav" aria-label="Hauptnavigation">
+        <a href="/"             class="navbar__link">Start</a>
+        <a href="/shop.html"    class="navbar__link">Shop</a>
+        <a href="/contact.html" class="navbar__link">Kontakt</a>
+      </nav>
+      <div class="navbar__actions">
+        <a href="/cart.html" class="cart-icon" aria-label="Warenkorb">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge" aria-live="polite"></span>
+        </a>
+        <button class="navbar__hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobiles Menü">
+    <div class="mobile-menu__header">
+      <span class="navbar__logo">Man<span>dea</span></span>
+      <button class="mobile-menu__close btn btn--ghost" aria-label="Menü schließen">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="mobile-menu__nav">
+      <a href="/"             class="mobile-menu__link">Start</a>
+      <a href="/shop.html"    class="mobile-menu__link">Shop</a>
+      <a href="/contact.html" class="mobile-menu__link">Kontakt</a>
+    </div>
+  </nav>
+
+  <main id="main-content">
+
+    <!-- Breadcrumb -->
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Brotkrumenpfad">
+        <a href="/">Start</a>
+        <span class="breadcrumb__sep" aria-hidden="true">›</span>
+        <a href="/shop.html">Shop</a>
+        <span class="breadcrumb__sep" aria-hidden="true">›</span>
+        <span id="breadcrumb-category" aria-current="false"></span>
+        <span class="breadcrumb__sep" aria-hidden="true">›</span>
+        <span id="breadcrumb-name" aria-current="page"></span>
+      </nav>
+    </div>
+
+    <!-- ── PRODUKT ── -->
+    <section class="product-detail section--sm" id="product-section" aria-label="Produktdetail">
+      <div class="container">
+
+        <!-- Lade-Skeleton -->
+        <div class="product-detail__skeleton" id="product-skeleton" aria-hidden="true">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-info">
+            <div class="skeleton-line w-20"></div>
+            <div class="skeleton-line w-60"></div>
+            <div class="skeleton-line w-40"></div>
+            <div class="skeleton-line w-80"></div>
+            <div class="skeleton-line w-80"></div>
+            <div class="skeleton-line w-50"></div>
+          </div>
+        </div>
+
+        <!-- Produkt-Inhalt (wird per JS eingeblendet) -->
+        <div class="product-detail__grid hidden" id="product-content">
+
+          <!-- Bilder-Spalte -->
+          <div class="product-detail__images">
+            <div class="product-detail__main-img" id="main-image">
+              <div class="product-detail__placeholder img-placeholder">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Foto folgt</span>
+              </div>
+            </div>
+            <!-- Thumbnail-Reihe (nur wenn mehrere Bilder) -->
+            <div class="product-detail__thumbs" id="thumb-row"></div>
+          </div>
+
+          <!-- Info-Spalte -->
+          <div class="product-detail__info">
+
+            <span class="label" id="product-category-label"></span>
+
+            <h1 class="product-detail__name" id="product-name"></h1>
+
+            <div class="product-detail__price-row">
+              <span class="product-detail__price" id="product-price"></span>
+              <span class="product-detail__badge" id="product-badge"></span>
+            </div>
+
+            <div class="divider divider--left"></div>
+
+            <p class="product-detail__desc" id="product-desc"></p>
+
+            <!-- Details / Materialangaben -->
+            <div class="product-detail__details" id="product-details">
+              <p class="product-detail__details-label">Details</p>
+              <ul id="details-list"></ul>
+            </div>
+
+            <!-- Menge -->
+            <div class="product-detail__qty">
+              <label class="form-label" for="qty-input">Anzahl</label>
+              <div class="qty-control qty-control--large">
+                <button id="qty-minus" aria-label="Anzahl verringern">−</button>
+                <input type="number" id="qty-input" value="1" min="1" max="10"
+                       class="qty-input" aria-label="Anzahl" readonly>
+                <button id="qty-plus" aria-label="Anzahl erhöhen">+</button>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="product-detail__actions">
+              <button class="btn btn--primary btn--lg btn--full" id="add-to-cart-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                In den Warenkorb
+              </button>
+              <a href="/cart.html" class="btn btn--secondary btn--lg btn--full">
+                Direkt zum Warenkorb
+              </a>
+            </div>
+
+            <!-- Trust-Hinweise -->
+            <div class="product-detail__trust">
+              <div class="product-trust-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <span>Versand innerhalb von 2–4 Werktagen</span>
+              </div>
+              <div class="product-trust-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Sicher bezahlen via Stripe</span>
+              </div>
+              <div class="product-trust-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                <span>14 Tage Rückgaberecht</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Fehler-Zustand -->
+        <div class="product-not-found hidden" id="product-error">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <h2>Produkt nicht gefunden</h2>
+          <p>Das gesuchte Stück existiert leider nicht oder ist nicht mehr verfügbar.</p>
+          <a href="/shop.html" class="btn btn--primary">Zurück zum Shop</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── ÄHNLICHE PRODUKTE ── -->
+    <section class="related section--sm" style="background-color:var(--color-bg-alt);" aria-labelledby="related-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="label">Dir könnte auch gefallen</span>
+          <h2 id="related-heading">Weitere Stücke</h2>
+        </div>
+        <div class="divider"></div>
+        <div class="product-grid" id="related-grid"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__col">
+          <div class="footer__brand">Man<span>dea</span></div>
+          <p class="footer__tagline">Handgefertigter Modeschmuck — Unikate und Kleinserien mit Seele.</p>
+        </div>
+        <div class="footer__col">
+          <p class="footer__heading">Shop</p>
+          <nav class="footer__links"><a href="/shop.html?kategorie=ohrringe">Ohrringe</a><a href="/shop.html?kategorie=armbänder">Armbänder</a><a href="/shop.html?kategorie=ketten">Ketten</a><a href="/shop.html?kategorie=ringe">Ringe</a></nav>
+        </div>
+        <div class="footer__col">
+          <p class="footer__heading">Info</p>
+          <nav class="footer__links"><a href="/#about">Über Mandea</a><a href="/contact.html">Kontakt</a></nav>
+        </div>
+        <div class="footer__col">
+          <p class="footer__heading">Rechtliches</p>
+          <nav class="footer__links"><a href="/contact.html#impressum">Impressum</a><a href="/contact.html#datenschutz">Datenschutz</a><a href="/contact.html#agb">AGB</a></nav>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>© <span id="footer-year"></span> Mandea. Alle Rechte vorbehalten.</p>
+        <p>Handmade with ♥ in Deutschland</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initNavbar, updateCartBadge, loadProducts, getProductById, addToCart, formatPrice } from '/js/utils.js';
+
+    initNavbar();
+    updateCartBadge();
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    const params  = new URLSearchParams(window.location.search);
+    const id      = params.get('id');
+    let qty = 1;
+
+    // ── Mengensteuerung ───────────────────────────────────────
+    const qtyInput = document.getElementById('qty-input');
+    document.getElementById('qty-minus').addEventListener('click', () => {
+      if (qty > 1) { qty--; qtyInput.value = qty; }
+    });
+    document.getElementById('qty-plus').addEventListener('click', () => {
+      if (qty < 10) { qty++; qtyInput.value = qty; }
+    });
+
+    // ── Produkt laden & rendern ───────────────────────────────
+    async function init() {
+      const skeleton = document.getElementById('product-skeleton');
+      const content  = document.getElementById('product-content');
+      const errEl    = document.getElementById('product-error');
+
+      if (!id) {
+        skeleton.classList.add('hidden');
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const product = await getProductById(id);
+
+        if (!product) {
+          skeleton.classList.add('hidden');
+          errEl.classList.remove('hidden');
+          return;
+        }
+
+        // Meta-Tags dynamisch setzen
+        document.title = `${product.name} — Mandea`;
+        document.querySelector('meta[name="description"]')
+          .setAttribute('content', product.description);
+
+        // Breadcrumb
+        document.getElementById('breadcrumb-category').textContent = product.categoryLabel;
+        document.getElementById('breadcrumb-name').textContent = product.name;
+
+        // Inhalte füllen
+        document.getElementById('product-category-label').textContent = product.categoryLabel;
+        document.getElementById('product-name').textContent           = product.name;
+        document.getElementById('product-price').textContent          = formatPrice(product.price);
+        document.getElementById('product-desc').textContent           = product.description;
+
+        const badgeEl = document.getElementById('product-badge');
+        if (product.badge) {
+          badgeEl.textContent = product.badge;
+          badgeEl.classList.remove('hidden');
+        }
+
+        // Details-Liste
+        const detailsList = document.getElementById('details-list');
+        if (product.details?.length) {
+          product.details.forEach(d => {
+            const li = document.createElement('li');
+            li.textContent = d;
+            detailsList.appendChild(li);
+          });
+        } else {
+          document.getElementById('product-details').classList.add('hidden');
+        }
+
+        // Warenkorb-Button
+        document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+          addToCart(product, qty);
+        });
+
+        // Anzeige
+        skeleton.classList.add('hidden');
+        content.classList.remove('hidden');
+
+        // ── Ähnliche Produkte ─────────────────────────────────
+        const allProducts = await loadProducts();
+        const related = allProducts
+          .filter(p => p.id !== product.id && p.category === product.category)
+          .slice(0, 4);
+
+        const relGrid = document.getElementById('related-grid');
+        if (related.length) {
+          relGrid.innerHTML = related.map(p => `
+            <article class="product-card animate-fadein">
+              <a href="/product.html?id=${p.id}" class="product-card__image" aria-label="${p.name} ansehen">
+                <div class="product-card__image-placeholder">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <span>${p.categoryLabel}</span>
+                </div>
+                ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ''}
+              </a>
+              <div class="product-card__body">
+                <p class="product-card__category">${p.categoryLabel}</p>
+                <h3 class="product-card__name"><a href="/product.html?id=${p.id}">${p.name}</a></h3>
+                <div class="product-card__footer">
+                  <span class="product-card__price">${formatPrice(p.price)}</span>
+                  <button class="product-card__add" aria-label="${p.name} in den Warenkorb" data-id="${p.id}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                </div>
+              </div>
+            </article>`).join('');
+
+          relGrid.querySelectorAll('.product-card__add').forEach(btn => {
+            btn.addEventListener('click', async e => {
+              e.preventDefault();
+              const p = allProducts.find(x => x.id === btn.dataset.id);
+              if (p) addToCart(p);
+            });
+          });
+        } else {
+          document.querySelector('.related').style.display = 'none';
+        }
+
+      } catch (err) {
+        skeleton.classList.add('hidden');
+        errEl.classList.remove('hidden');
+        console.error(err);
+      }
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

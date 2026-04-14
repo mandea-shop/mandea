@@ -1,0 +1,70 @@
+# ============================================================
+# MANDEA — Netlify Konfiguration
+# ============================================================
+
+[build]
+  # Welcher Ordner wird deployed
+  publish = "public"
+  # Netlify Functions Verzeichnis
+  functions = "netlify/functions"
+
+# Alle .html-Seiten direkt routen
+[[redirects]]
+  from = "/shop"
+  to   = "/shop.html"
+  status = 200
+
+[[redirects]]
+  from = "/cart"
+  to   = "/cart.html"
+  status = 200
+
+[[redirects]]
+  from = "/contact"
+  to   = "/contact.html"
+  status = 200
+
+[[redirects]]
+  from = "/success"
+  to   = "/success.html"
+  status = 200
+
+[[redirects]]
+  from = "/cancel"
+  to   = "/cancel.html"
+  status = 200
+
+# Sicherheits-Header
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Cache-Strategie für Assets
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+# products.json öfter aktualisieren
+[[headers]]
+  for = "/products.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# Node-Version für Functions
+[functions]
+  node_bundler = "esbuild"

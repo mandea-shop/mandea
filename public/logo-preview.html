@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mandea — Logo-Vorschau</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Jost', system-ui, sans-serif;
+      background: #FAF7F2;
+      color: #2E1F14;
+      min-height: 100vh;
+      padding: 48px 32px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 2rem;
+      color: #B89A6A;
+      margin-bottom: 8px;
+    }
+    .intro {
+      font-size: 0.8rem;
+      color: #A8947E;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 56px;
+    }
+
+    /* ── GRID ── */
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 48px;
+      max-width: 1100px;
+    }
+
+    .logo-card {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .logo-card h2 {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #A8947E;
+      border-bottom: 1px solid #E0D5C8;
+      padding-bottom: 10px;
+    }
+
+    /* ── VORSCHAU-FLÄCHEN ── */
+    .preview {
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+    }
+    .preview--light  { background: #FFFCF8; border: 1px solid #E0D5C8; }
+    .preview--cream  { background: #F3EDE4; border: 1px solid #E0D5C8; }
+    .preview--dark   { background: #2E1F14; }
+    .preview--gold   { background: #B89A6A; }
+
+    .preview img, .preview svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Für das moderne horizontale Logo etwas Zoom */
+    .preview--wide img { max-width: 240px; }
+    /* Für das elegante hochformatige Logo  */
+    .preview--tall img { max-width: 200px; }
+
+    .label {
+      font-size: 0.68rem;
+      color: #A8947E;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: -12px;
+      text-align: center;
+    }
+
+    /* ── HINWEIS-BOX ── */
+    .note {
+      margin-top: 56px;
+      max-width: 700px;
+      background: #FFFCF8;
+      border: 1px solid #E0D5C8;
+      border-radius: 12px;
+      padding: 24px 28px;
+    }
+    .note h3 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #B89A6A;
+      margin-bottom: 12px;
+    }
+    .note ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .note li {
+      font-size: 0.82rem;
+      color: #7A6555;
+      line-height: 1.6;
+      padding-left: 16px;
+      position: relative;
+    }
+    .note li::before {
+      content: "✦";
+      position: absolute;
+      left: 0;
+      color: #B89A6A;
+      font-size: 0.6rem;
+      top: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Logo-Vorschau</h1>
+  <p class="intro">Mandea — Zwei Varianten · Gold auf verschiedenen Hintergründen</p>
+
+  <div class="logo-grid">
+
+    <!-- ── VERSION 1: ELEGANT ── -->
+    <div class="logo-card">
+      <h2>Version 1 — Elegant &amp; Romantisch</h2>
+
+      <div class="preview preview--light preview--tall">
+        <img src="/images/mandea-logo-elegant.svg" alt="Mandea Logo Elegant">
+      </div>
+      <p class="label">Hell (Website · Visitenkarte)</p>
+
+      <div class="preview preview--cream preview--tall">
+        <img src="/images/mandea-logo-elegant.svg" alt="Mandea Logo Elegant auf Creme">
+      </div>
+      <p class="label">Creme-Hintergrund</p>
+
+      <div class="preview preview--dark preview--tall">
+        <img src="/images/mandea-logo-elegant.svg" alt="Mandea Logo Elegant auf Dunkel">
+      </div>
+      <p class="label">Dunkel (Instagram · Verpackung)</p>
+    </div>
+
+    <!-- ── VERSION 2: MODERN ── -->
+    <div class="logo-card">
+      <h2>Version 2 — Clean &amp; Modern</h2>
+
+      <div class="preview preview--light preview--wide">
+        <img src="/images/mandea-logo-modern.svg" alt="Mandea Logo Modern">
+      </div>
+      <p class="label">Hell (Webseite · Navbar)</p>
+
+      <div class="preview preview--cream preview--wide">
+        <img src="/images/mandea-logo-modern.svg" alt="Mandea Logo Modern auf Creme">
+      </div>
+      <p class="label">Creme-Hintergrund</p>
+
+      <div class="preview preview--dark preview--wide">
+        <img src="/images/mandea-logo-modern.svg" alt="Mandea Logo Modern auf Dunkel">
+      </div>
+      <p class="label">Dunkel (Instagram · Banner)</p>
+    </div>
+
+  </div>
+
+  <!-- ── HINWEISE ── -->
+  <div class="note">
+    <h3>Verwendung & Export</h3>
+    <ul>
+      <li>Beide Logos sind <strong>SVG-Dateien</strong> — skalieren ohne Qualitätsverlust auf jede Größe.</li>
+      <li>Für <strong>Instagram-Profilbild</strong> (Kreis-Crop): Logo elegant als PNG 800×800 exportieren, dabei auf weißem Hintergrund.</li>
+      <li>Für <strong>Druck</strong> (Visitenkarte, Aufkleber): SVG in Inkscape oder Illustrator öffnen → Text in Pfade umwandeln → als PDF oder EPS exportieren.</li>
+      <li>Für die <strong>Webseite-Navbar</strong> empfiehlt sich Version 2 (Modern/Horizontal).</li>
+      <li>Die Dateien liegen in <code>public/images/</code>: <code>mandea-logo-elegant.svg</code> und <code>mandea-logo-modern.svg</code>.</li>
+    </ul>
+  </div>
+
+</body>
+</html>

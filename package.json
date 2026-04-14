@@ -1,0 +1,16 @@
+{
+  "name": "mandea",
+  "version": "1.0.0",
+  "description": "Mandea — Handgefertigter Modeschmuck",
+  "type": "module",
+  "scripts": {
+    "dev":   "netlify dev",
+    "serve": "npx serve public -l 3000 --cors"
+  },
+  "dependencies": {
+    "stripe": "^16.0.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}

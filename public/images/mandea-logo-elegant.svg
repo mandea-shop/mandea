@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MANDEA — Logo Elegant
+  Stil: Romantisch · Handschriftlich · Schmuck-Feeling
+  Schriften: Cormorant Garamond (italic, light) + Jost
+  Verwendung: Instagram-Profil · Visitenkarte · Aufkleber · Webseite
+  Hinweis: Für Druck/Inkscape/Illustrator Text in Pfade umwandeln:
+           Inkscape → Pfad → Objekt in Pfad
+           Illustrator → Schrift → In Pfade umwandeln
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 132" role="img" aria-label="Mandea Logo">
+
+  <!-- ══ HAND-SYMBOL ══════════════════════════════════════ -->
+  <!--
+    Elegante Hand mit dünnen Strichen, Seitenansicht von vorn.
+    Vier Finger · Ring am Ringfinger · geschwungene Handfläche
+  -->
+  <g transform="translate(79.5, 6)"
+     fill="none"
+     stroke="#B89A6A"
+     stroke-width="1.25"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+
+    <!-- Kleiner Finger (links, kürzer) -->
+    <path d="M 0 48 L 0 28 A 4 4 0 0 0 8 28 L 8 48"/>
+
+    <!-- Ringfinger -->
+    <path d="M 11 46 L 11 18 A 4 4 0 0 0 19 18 L 19 46"/>
+
+    <!-- Ring am Ringfinger — kleiner Kreis als Schmuckstück -->
+    <circle cx="15" cy="34" r="3.2"/>
+    <!-- winziger Stein-Akzent oben am Ring -->
+    <circle cx="15" cy="30.8" r="1" fill="#B89A6A" stroke="none"/>
+
+    <!-- Mittelfinger (höchster) -->
+    <path d="M 22 44 L 22 14 A 4 4 0 0 0 30 14 L 30 44"/>
+
+    <!-- Zeigefinger (rechts) -->
+    <path d="M 33 46 L 33 22 A 4 4 0 0 0 41 22 L 41 46"/>
+
+    <!-- Handflächen-Kurve -->
+    <path d="M 0 48 Q 20.5 56 41 48"/>
+    <!-- Handgelenk-Kurve -->
+    <path d="M 4 54 Q 20.5 60 37 54"/>
+
+  </g>
+
+  <!-- ══ DEKORATIVER TRENNER ═══════════════════════════════ -->
+  <!-- Diamant-Ornament in der Mitte -->
+  <path d="M 100 76 L 103.5 80.5 L 100 85 L 96.5 80.5 Z" fill="#B89A6A"/>
+  <!-- Zierlinie links -->
+  <line x1="50" y1="80.5" x2="92" y2="80.5"
+        stroke="#B89A6A" stroke-width="0.55"/>
+  <!-- Zierlinie rechts -->
+  <line x1="108" y1="80.5" x2="150" y2="80.5"
+        stroke="#B89A6A" stroke-width="0.55"/>
+
+  <!-- ══ WORTMARKE ════════════════════════════════════════ -->
+  <text x="100" y="111"
+        text-anchor="middle"
+        font-family="'Cormorant Garamond', Georgia, serif"
+        font-style="italic"
+        font-weight="300"
+        font-size="36"
+        fill="#2E1F14"
+        letter-spacing="2">Mandea</text>
+
+  <!-- Subline -->
+  <text x="100" y="125"
+        text-anchor="middle"
+        font-family="'Jost', system-ui, sans-serif"
+        font-size="7"
+        font-weight="400"
+        letter-spacing="5"
+        fill="#B89A6A">HANDMADE SCHMUCK</text>
+
+</svg>

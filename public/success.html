@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Bestellung erfolgreich — Mandea</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/status.css">
+</head>
+<body>
+
+  <header class="navbar" role="banner">
+    <div class="container navbar__inner">
+      <a href="/" class="navbar__logo">Man<span>dea</span></a>
+      <nav class="navbar__nav" aria-label="Hauptnavigation">
+        <a href="/"             class="navbar__link">Start</a>
+        <a href="/shop.html"    class="navbar__link">Shop</a>
+        <a href="/contact.html" class="navbar__link">Kontakt</a>
+      </nav>
+      <div class="navbar__actions">
+        <a href="/cart.html" class="cart-icon" aria-label="Warenkorb">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge" aria-live="polite"></span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="status-page">
+    <div class="container">
+      <div class="status-card status-card--success animate-fadein-scale">
+
+        <div class="status-card__icon status-card__icon--success" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+
+        <span class="label" style="color: var(--color-success);">Zahlung erfolgreich</span>
+        <h1>Vielen Dank für deine Bestellung!</h1>
+
+        <div class="divider"></div>
+
+        <p class="status-card__text">
+          Deine Bestellung ist eingegangen und wird mit Sorgfalt für dich vorbereitet.
+          Du erhältst in Kürze eine Bestätigungs-E-Mail mit allen Details.
+        </p>
+
+        <div class="status-card__info">
+          <div class="status-info-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span>Versand innerhalb von 2–4 Werktagen</span>
+          </div>
+          <div class="status-info-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>Bestätigung per E-Mail unterwegs</span>
+          </div>
+          <div class="status-info-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            <span>Mit Liebe handgefertigt für dich</span>
+          </div>
+        </div>
+
+        <div class="status-card__actions">
+          <a href="/shop.html" class="btn btn--primary btn--lg">Weitere Stücke entdecken</a>
+          <a href="/"          class="btn btn--ghost btn--lg">Zurück zur Startseite</a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__bottom" style="border-top: none; padding-top: 0;">
+        <p>© <span id="footer-year"></span> Mandea. Alle Rechte vorbehalten.</p>
+        <p>Handmade with ♥ in Deutschland</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initNavbar, updateCartBadge, clearCart } from '/js/utils.js';
+    initNavbar();
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    // Warenkorb leeren nach erfolgreicher Zahlung
+    clearCart();
+    updateCartBadge();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+# Abhängigkeiten
+node_modules/
+
+# Umgebungsvariablen — NIEMALS committen
+.env
+.env.local
+
+# Netlify Build-Output
+.netlify/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MANDEA — Logo Modern
+  Stil: Clean · Geometrisch · Zeitlos
+  Schriften: Jost (light, 300)
+  Verwendung: Webseite-Navbar · Banner · E-Mail-Signatur · breite Aufkleber
+  Hinweis: Für Druck Text in Pfade umwandeln (Inkscape / Illustrator)
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 68" role="img" aria-label="Mandea Logo">
+
+  <!-- ══ HAND-SYMBOL (gefüllt, geometrisch) ══════════════════ -->
+  <!--
+    Vier solide Finger als abgerundete Rechtecke.
+    Goldene Farbe. Kleiner Highlight-Ring am Ringfinger.
+  -->
+  <g transform="translate(6, 6)" fill="#B89A6A">
+
+    <!-- Handfläche als Basis (breites Rechteck, abgerundet) -->
+    <rect x="0" y="36" width="36" height="20" rx="8"/>
+
+    <!-- Kleiner Finger (links, kürzer) -->
+    <rect x="0"  y="18" width="7" height="24" rx="3.5"/>
+    <!-- Ringfinger -->
+    <rect x="10" y="10" width="7" height="32" rx="3.5"/>
+    <!-- Mittelfinger (höchster) -->
+    <rect x="20" y="4"  width="8" height="38" rx="4"/>
+    <!-- Zeigefinger -->
+    <rect x="31" y="12" width="7" height="30" rx="3.5"/>
+
+    <!-- Ring-Highlight am Ringfinger (weißer Balken = sichtbarer Ring) -->
+    <rect x="9" y="28" width="9" height="4" rx="2" fill="white" opacity="0.85"/>
+
+  </g>
+
+  <!-- ══ VERTIKALE TRENNLINIE ══════════════════════════════ -->
+  <line x1="56" y1="10" x2="56" y2="58"
+        stroke="#B89A6A" stroke-width="1.2"/>
+
+  <!-- ══ TEXT-BLOCK ════════════════════════════════════════ -->
+
+  <!-- Hauptwortmarke -->
+  <text x="70" y="37"
+        font-family="'Jost', system-ui, sans-serif"
+        font-size="24"
+        font-weight="300"
+        letter-spacing="7"
+        fill="#2E1F14">MANDEA</text>
+
+  <!-- Dünne Goldlinie unter der Wortmarke -->
+  <line x1="70" y1="44" x2="236" y2="44"
+        stroke="#B89A6A" stroke-width="1.2"/>
+
+  <!-- Subline -->
+  <text x="71" y="56"
+        font-family="'Jost', system-ui, sans-serif"
+        font-size="7.5"
+        font-weight="400"
+        letter-spacing="4"
+        fill="#B89A6A">HANDMADE SCHMUCK</text>
+
+</svg>

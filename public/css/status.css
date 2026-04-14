@@ -1,0 +1,108 @@
+/* ============================================================
+   MANDEA — Status-Seiten (success.html, cancel.html)
+   ============================================================ */
+
+.status-page {
+  min-height: calc(100svh - 72px - 80px);
+  display: flex;
+  align-items: center;
+  padding-block: var(--space-16);
+  background: linear-gradient(160deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
+}
+
+.status-card {
+  max-width: 560px;
+  margin-inline: auto;
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-12) var(--space-10);
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+}
+
+/* ── Icon ──────────────────────────────────────────────── */
+
+.status-card__icon {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline: auto;
+  margin-bottom: var(--space-6);
+}
+
+.status-card__icon--success {
+  background-color: rgba(106, 156, 106, 0.12);
+  color: var(--color-success);
+  border: 1.5px solid rgba(106, 156, 106, 0.25);
+}
+
+.status-card__icon--cancel {
+  background-color: var(--color-blush-light);
+  color: var(--color-text-light);
+  border: 1.5px solid var(--color-border);
+}
+
+/* ── Typografie ────────────────────────────────────────── */
+
+.status-card .label {
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.status-card h1 {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-light);
+  line-height: var(--leading-snug);
+  margin-bottom: var(--space-4);
+}
+
+.status-card__text {
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+}
+
+/* ── Info-Kästchen (nur success) ───────────────────────── */
+
+.status-card__info {
+  background-color: var(--color-bg-alt);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  margin-bottom: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: left;
+}
+
+.status-info-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.status-info-item svg {
+  flex-shrink: 0;
+  color: var(--color-gold);
+}
+
+/* ── Buttons ───────────────────────────────────────────── */
+
+.status-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@media (max-width: 480px) {
+  .status-card {
+    padding: var(--space-8) var(--space-6);
+  }
+}

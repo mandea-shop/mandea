@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kontakt, Impressum, Datenschutz und AGB von Mandea.">
+  <title>Kontakt & Impressum — Mandea</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/contact.css">
+</head>
+<body>
+
+  <header class="navbar" role="banner">
+    <div class="container navbar__inner">
+      <a href="/" class="navbar__logo">Man<span>dea</span></a>
+      <nav class="navbar__nav" aria-label="Hauptnavigation">
+        <a href="/"             class="navbar__link">Start</a>
+        <a href="/shop.html"    class="navbar__link">Shop</a>
+        <a href="/contact.html" class="navbar__link">Kontakt</a>
+      </nav>
+      <div class="navbar__actions">
+        <a href="/cart.html" class="cart-icon" aria-label="Warenkorb">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge" aria-live="polite"></span>
+        </a>
+        <button class="navbar__hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobiles Menü">
+    <div class="mobile-menu__header">
+      <span class="navbar__logo">Man<span>dea</span></span>
+      <button class="mobile-menu__close btn btn--ghost" aria-label="Menü schließen">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="mobile-menu__nav">
+      <a href="/"             class="mobile-menu__link">Start</a>
+      <a href="/shop.html"    class="mobile-menu__link">Shop</a>
+      <a href="/contact.html" class="mobile-menu__link">Kontakt</a>
+    </div>
+  </nav>
+
+  <main id="main-content">
+
+    <div class="page-hero">
+      <div class="container">
+        <span class="label">Wir sind für dich da</span>
+        <h1>Kontakt</h1>
+        <p>Fragen, Wünsche oder einfach Hallo sagen — meld dich gerne.</p>
+      </div>
+    </div>
+
+    <!-- ── KONTAKT ── -->
+    <section class="contact-section section" aria-labelledby="contact-heading">
+      <div class="container">
+        <div class="contact-grid">
+
+          <!-- Kontaktformular -->
+          <div class="contact-form-wrap">
+            <h2 id="contact-heading">Schreib mir</h2>
+            <div class="divider divider--left"></div>
+
+            <form class="contact-form" id="contact-form" novalidate aria-label="Kontaktformular">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="cf-name">Name *</label>
+                  <input class="form-input" type="text" id="cf-name" name="name"
+                         autocomplete="name" required placeholder="Dein Name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="cf-email">E-Mail *</label>
+                  <input class="form-input" type="email" id="cf-email" name="email"
+                         autocomplete="email" required placeholder="deine@email.de">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cf-subject">Betreff</label>
+                <input class="form-input" type="text" id="cf-subject" name="subject"
+                       placeholder="Worum geht es?">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cf-message">Nachricht *</label>
+                <textarea class="form-textarea" id="cf-message" name="message"
+                          required placeholder="Deine Nachricht…" rows="6"></textarea>
+              </div>
+
+              <div class="form-group form-group--checkbox">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="cf-privacy" name="privacy" required>
+                  <span>Ich habe die <a href="#datenschutz">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zu. *</span>
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn--primary btn--lg" id="cf-submit">
+                Nachricht senden
+              </button>
+
+              <p class="contact-form__note">* Pflichtfelder. Deine Daten werden ausschließlich zur Beantwortung deiner Anfrage verwendet.</p>
+
+              <div class="contact-form__success hidden" id="cf-success" role="status">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Vielen Dank! Ich melde mich so schnell wie möglich.
+              </div>
+            </form>
+          </div>
+
+          <!-- Kontakt-Info -->
+          <aside class="contact-info" aria-label="Kontaktinformationen">
+            <div class="contact-info__card">
+              <h3>Direkter Kontakt</h3>
+              <div class="contact-info__items">
+                <div class="contact-info__item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <div>
+                    <p class="contact-info__label">E-Mail</p>
+                    <a href="mailto:info@mandea-shop.de">info@mandea-shop.de</a>
+                  </div>
+                </div>
+                <div class="contact-info__item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  <div>
+                    <p class="contact-info__label">Instagram</p>
+                    <a href="https://instagram.com/herzenssachen_by_mandy" target="_blank" rel="noopener noreferrer">@herzenssachen_by_mandy</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-info__card" id="versand">
+              <h3>Versand & Rückgabe</h3>
+              <dl class="contact-faq">
+                <div class="contact-faq__item">
+                  <dt>Wie lange dauert der Versand?</dt>
+                  <dd>Innerhalb von 2–4 Werktagen nach Zahlungseingang. Versand aus Deutschland.</dd>
+                </div>
+                <div class="contact-faq__item">
+                  <dt>Ab wann ist der Versand kostenlos?</dt>
+                  <dd>Ab einem Bestellwert von 60 € liefern wir versandkostenfrei. Darunter fallen 4,90 € Versandkosten an.</dd>
+                </div>
+                <div class="contact-faq__item">
+                  <dt>Mit welchem Anbieter wird versendet?</dt>
+                  <dd>Wir versenden überwiegend mit DHL, gelegentlich auch mit Hermes.</dd>
+                </div>
+                <div class="contact-faq__item">
+                  <dt>Kann ich zurückgeben?</dt>
+                  <dd>Ja — du hast 14 Tage Widerrufsrecht ab Erhalt der Ware. Schreib einfach eine E-Mail an info@mandea-shop.de. Die Rücksendekosten trägt die Käuferin.</dd>
+                </div>
+                <div class="contact-faq__item">
+                  <dt>Liefert ihr ins Ausland?</dt>
+                  <dd>Aktuell liefern wir nach Deutschland, Österreich und in die Schweiz.</dd>
+                </div>
+              </dl>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── IMPRESSUM ── -->
+    <section class="legal-section section--sm" id="impressum" aria-labelledby="impressum-heading"
+             style="background-color: var(--color-bg-alt); border-top: 1px solid var(--color-border);">
+      <div class="container container--narrow">
+        <span class="label">Rechtliches</span>
+        <h2 id="impressum-heading">Impressum</h2>
+        <div class="divider divider--left"></div>
+
+        <div class="legal-content">
+          <p><strong>Angaben gemäß § 5 TMG</strong></p>
+
+          <p>
+            Mandy Egerland<br>
+            Cathleen-Bush-Str. 48a<br>
+            87740 Buxheim<br>
+            Deutschland
+          </p>
+
+          <p>
+            <strong>Kontakt</strong><br>
+            E-Mail: <a href="mailto:info@mandea-shop.de">info@mandea-shop.de</a>
+          </p>
+
+          <p>
+            <strong>Umsatzsteuer</strong><br>
+            Gemäß § 19 UStG wird als Kleinunternehmerin keine Umsatzsteuer erhoben und ausgewiesen.
+          </p>
+
+          <p>
+            <strong>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</strong><br>
+            Mandy Egerland, Cathleen-Bush-Str. 48a, 87740 Buxheim
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── DATENSCHUTZ ── -->
+    <section class="legal-section section--sm" id="datenschutz" aria-labelledby="datenschutz-heading"
+             style="border-top: 1px solid var(--color-border);">
+      <div class="container container--narrow">
+        <span class="label">Rechtliches</span>
+        <h2 id="datenschutz-heading">Datenschutzerklärung</h2>
+        <div class="divider divider--left"></div>
+
+        <div class="legal-content">
+          <p><strong>1. Verantwortliche Stelle</strong></p>
+          <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br>
+          Mandy Egerland, Cathleen-Bush-Str. 48a, 87740 Buxheim<br>
+          E-Mail: <a href="mailto:info@mandea-shop.de">info@mandea-shop.de</a></p>
+
+          <p><strong>2. Welche Daten wir erheben</strong></p>
+          <p>Beim Besuch dieser Website werden automatisch technische Daten (IP-Adresse, Browser, Betriebssystem, Zugriffszeitpunkt) in Server-Logs gespeichert. Diese Daten werden nicht mit anderen Datenquellen zusammengeführt.</p>
+          <p>Bei einer Bestellung werden Name, E-Mail-Adresse und Lieferadresse erhoben. Die Zahlungsabwicklung erfolgt über <strong>Stripe</strong> — Zahlungsdaten werden ausschließlich an Stripe übermittelt und dort verarbeitet. Weitere Informationen findest du in der <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener noreferrer">Datenschutzerklärung von Stripe</a>.</p>
+          <p>Bei Nutzung des Kontaktformulars werden Name, E-Mail-Adresse und Nachrichteninhalt gespeichert, um deine Anfrage zu bearbeiten.</p>
+
+          <p><strong>3. Rechtsgrundlage</strong></p>
+          <p>Die Datenverarbeitung erfolgt auf Basis von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse).</p>
+
+          <p><strong>4. Speicherdauer</strong></p>
+          <p>Daten werden nur so lange gespeichert, wie es für den jeweiligen Zweck erforderlich ist oder gesetzliche Aufbewahrungsfristen es vorschreiben.</p>
+
+          <p><strong>5. Deine Rechte</strong></p>
+          <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Datenübertragbarkeit. Wende dich hierfür an: <a href="mailto:info@mandea-shop.de">info@mandea-shop.de</a></p>
+
+          <p><strong>6. Cookies und Lokaler Speicher</strong></p>
+          <p>Diese Website verwendet ausschließlich <em>localStorage</em> für den Warenkorb (technisch notwendig, kein Tracking). Es werden keine Tracking-Cookies oder Analyse-Dienste eingesetzt.</p>
+
+          <p><strong>7. Hosting</strong></p>
+          <p>Diese Website wird gehostet bei Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, USA. Netlify verarbeitet dabei technische Zugriffsdaten. Weitere Informationen: <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener noreferrer">netlify.com/privacy</a>.</p>
+
+          <p class="legal-placeholder-note">
+            ⚠️ Platzhalter — diese Datenschutzerklärung muss vor dem Go-live von einer Rechtsanwältin / einem Rechtsanwalt oder einem spezialisierten Dienst (z. B. datenschutz.org, e-recht24.de) geprüft und vervollständigt werden.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── AGB ── -->
+    <section class="legal-section section--sm" id="agb" aria-labelledby="agb-heading"
+             style="background-color: var(--color-bg-alt); border-top: 1px solid var(--color-border);">
+      <div class="container container--narrow">
+        <span class="label">Rechtliches</span>
+        <h2 id="agb-heading">Allgemeine Geschäftsbedingungen</h2>
+        <div class="divider divider--left"></div>
+
+        <div class="legal-content">
+          <p><strong>§ 1 Geltungsbereich</strong></p>
+          <p>Diese AGB gelten für alle Verträge zwischen Mandy Egerland (nachfolgend „Verkäuferin") und Verbrauchern über den Online-Shop www.mandea-shop.de.</p>
+
+          <p><strong>§ 2 Vertragsschluss</strong></p>
+          <p>Der Vertrag kommt zustande, wenn du nach Eingabe deiner Daten auf „Sicher bezahlen" klickst und die Zahlung erfolgreich abgeschlossen wird. Du erhältst eine Bestellbestätigung per E-Mail.</p>
+
+          <p><strong>§ 3 Widerrufsrecht</strong></p>
+          <p>Du hast das Recht, binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt 14 Tage ab dem Tag, an dem du die Ware in Besitz genommen hast. Um dein Widerrufsrecht auszuüben, teile uns deine Entscheidung durch eine eindeutige Erklärung per E-Mail mit: <a href="mailto:info@mandea-shop.de">info@mandea-shop.de</a>. Die Kosten der Rücksendung trägt die Käuferin.</p>
+
+          <p><strong>§ 4 Preise und Zahlung</strong></p>
+          <p>Alle Preise sind Endpreise. Als Kleinunternehmerin gemäß § 19 UStG wird keine Umsatzsteuer erhoben und ausgewiesen. Die Zahlung erfolgt über Stripe (Kreditkarte, PayPal, Klarna u. a.).</p>
+
+          <p><strong>§ 5 Versand</strong></p>
+          <p>Der Versand erfolgt innerhalb von 2–4 Werktagen nach Zahlungseingang, überwiegend per DHL, gelegentlich per Hermes. Versandkosten: 4,90 € (kostenlos ab 60 € Bestellwert). Liefergebiet: Deutschland, Österreich, Schweiz.</p>
+
+          <p><strong>§ 6 Gewährleistung</strong></p>
+          <p>Es gelten die gesetzlichen Gewährleistungsrechte.</p>
+
+          <p class="legal-placeholder-note">
+            ⚠️ Empfehlung: Diese AGB vor dem Go-live von einem spezialisierten Dienst (z. B. trusted-shops.de, it-recht-kanzlei.de) prüfen und vervollständigen lassen.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__col">
+          <div class="footer__brand">Man<span>dea</span></div>
+          <p class="footer__tagline">Handgefertigter Modeschmuck — Unikate und Kleinserien mit Seele.</p>
+        </div>
+        <div class="footer__col">
+          <p class="footer__heading">Shop</p>
+          <nav class="footer__links"><a href="/shop.html?kategorie=ohrringe">Ohrringe</a><a href="/shop.html?kategorie=armbänder">Armbänder</a><a href="/shop.html?kategorie=ketten">Ketten</a><a href="/shop.html?kategorie=ringe">Ringe</a></nav>
+        </div>
+        <div class="footer__col">
+          <p class="footer__heading">Info</p>
+          <nav class="footer__links"><a href="/#about">Über Mandea</a><a href="/contact.html">Kontakt</a></nav>
+        </div>
+        <div class="footer__col">
+          <p class="footer__heading">Rechtliches</p>
+          <nav class="footer__links"><a href="#impressum">Impressum</a><a href="#datenschutz">Datenschutz</a><a href="#agb">AGB</a></nav>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>© <span id="footer-year"></span> Mandea. Alle Rechte vorbehalten.</p>
+        <p>Handmade with ♥ in Deutschland</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initNavbar, updateCartBadge } from '/js/utils.js';
+    initNavbar();
+    updateCartBadge();
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    // Kontaktformular — einfache Client-Validierung
+    // (Für echten E-Mail-Versand: Netlify Forms oder eigene Function ergänzen)
+    const form    = document.getElementById('contact-form');
+    const success = document.getElementById('cf-success');
+    const submit  = document.getElementById('cf-submit');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = 'Wird gesendet…';
+
+      // Hier später echten API-Call oder Netlify Forms einhängen
+      setTimeout(() => {
+        form.reset();
+        submit.classList.add('hidden');
+        success.classList.remove('hidden');
+      }, 800);
+    });
+  </script>
+
+</body>
+</html>

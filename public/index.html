@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mandea — Handgefertigter Modeschmuck. Unikate und Kleinserien aus Leidenschaft gefertigt.">
+  <meta property="og:title" content="Mandea — Handgefertigter Schmuck">
+  <meta property="og:description" content="Unikate und Kleinserien, handmade mit Liebe zum Detail.">
+  <meta property="og:type" content="website">
+  <title>Mandea — Handgefertigter Schmuck</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+
+  <!-- ── NAVIGATION ── -->
+  <header class="navbar" role="banner">
+    <div class="container navbar__inner">
+      <a href="/" class="navbar__logo" aria-label="Mandea – Startseite">
+        Man<span>dea</span>
+      </a>
+
+      <nav class="navbar__nav" aria-label="Hauptnavigation">
+        <a href="/"         class="navbar__link">Start</a>
+        <a href="/shop.html"    class="navbar__link">Shop</a>
+        <a href="/contact.html" class="navbar__link">Kontakt</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <a href="/cart.html" class="cart-icon" aria-label="Warenkorb">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+          <span class="cart-badge" aria-live="polite" aria-label="Artikel im Warenkorb"></span>
+        </a>
+
+        <button class="navbar__hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── MOBILES MENÜ ── -->
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobiles Menü">
+    <div class="mobile-menu__header">
+      <span class="navbar__logo">Man<span>dea</span></span>
+      <button class="mobile-menu__close btn btn--ghost" aria-label="Menü schließen">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="mobile-menu__nav">
+      <a href="/"             class="mobile-menu__link">Start</a>
+      <a href="/shop.html"    class="mobile-menu__link">Shop</a>
+      <a href="/contact.html" class="mobile-menu__link">Kontakt</a>
+    </div>
+  </nav>
+
+  <main id="main-content">
+
+    <!-- ── HERO ── -->
+    <section class="hero" aria-label="Hero-Bereich">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="container hero__content">
+        <p class="label hero__label">Handmade with love</p>
+        <h1 class="hero__headline">
+          Schmuck, der<br>
+          <em>Geschichten erzählt</em>
+        </h1>
+        <p class="hero__sub">
+          Jedes Stück ein Unikat — liebevoll gefertigt für Frauen,<br class="hero__br">
+          die Dinge mit Seele tragen möchten.
+        </p>
+        <div class="hero__cta">
+          <a href="/shop.html" class="btn btn--primary btn--lg">Kollektion entdecken</a>
+          <a href="#about"     class="btn btn--ghost btn--lg">Über Mandea</a>
+        </div>
+      </div>
+
+      <!-- Deko-Ornament: Mandea-Logo-Medaillon -->
+      <div class="hero__ornament" aria-hidden="true">
+        <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Äußerer Strichring -->
+          <circle cx="200" cy="200" r="190" stroke="currentColor" stroke-width="0.6" stroke-dasharray="3 6"/>
+          <!-- Mittlerer Ring -->
+          <circle cx="200" cy="200" r="162" stroke="currentColor" stroke-width="0.5"/>
+          <!-- Innerer Ring -->
+          <circle cx="200" cy="200" r="134" stroke="currentColor" stroke-width="1"/>
+
+          <!-- Diamant-Ornamente an den Himmelsrichtungen -->
+          <path d="M200 8 L206 18 L200 28 L194 18 Z" fill="currentColor"/>
+          <path d="M200 372 L206 382 L200 392 L194 382 Z" fill="currentColor"/>
+          <path d="M8 200 L18 194 L28 200 L18 206 Z" fill="currentColor"/>
+          <path d="M372 200 L382 194 L392 200 L382 206 Z" fill="currentColor"/>
+
+          <!-- Kleine Punkte auf den Zwischenachsen -->
+          <circle cx="200" cy="37"  r="2.5" fill="currentColor" opacity="0.5"/>
+          <circle cx="200" cy="363" r="2.5" fill="currentColor" opacity="0.5"/>
+          <circle cx="37"  cy="200" r="2.5" fill="currentColor" opacity="0.5"/>
+          <circle cx="363" cy="200" r="2.5" fill="currentColor" opacity="0.5"/>
+
+          <!-- Diagonal-Akzente -->
+          <circle cx="68"  cy="68"  r="2" fill="currentColor" opacity="0.35"/>
+          <circle cx="332" cy="68"  r="2" fill="currentColor" opacity="0.35"/>
+          <circle cx="68"  cy="332" r="2" fill="currentColor" opacity="0.35"/>
+          <circle cx="332" cy="332" r="2" fill="currentColor" opacity="0.35"/>
+
+          <!-- Großes italisches M (zentrales Markenzeichen) -->
+          <text x="200" y="238"
+                text-anchor="middle"
+                font-family="Cormorant Garamond, Georgia, serif"
+                font-size="168" font-style="italic" font-weight="300"
+                fill="currentColor">M</text>
+
+          <!-- Zierlinien links und rechts -->
+          <line x1="76"  y1="268" x2="130" y2="268" stroke="currentColor" stroke-width="0.6"/>
+          <line x1="270" y1="268" x2="324" y2="268" stroke="currentColor" stroke-width="0.6"/>
+
+          <!-- "ANDEA" in weitem Zeichenabstand -->
+          <text x="200" y="290"
+                text-anchor="middle"
+                font-family="Jost, sans-serif"
+                font-size="20" font-weight="300"
+                letter-spacing="10"
+                fill="currentColor" opacity="0.75">ANDEA</text>
+        </svg>
+      </div>
+    </section>
+
+
+    <!-- ── KATEGORIEN-KACHELN ── -->
+    <section class="categories section" aria-labelledby="categories-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="label">Entdecke</span>
+          <h2 id="categories-heading">Die Kollektion</h2>
+          <p>Von zarten Ringen bis zu statement-starken Ohrringen — alles handgefertigt, alles mit Herz.</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="categories__grid">
+
+          <a href="/shop.html?kategorie=ohrringe" class="category-card" aria-label="Ohrringe entdecken">
+            <div class="category-card__image">
+              <div class="img-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2"/><path d="M12 8c0 4-4 8-4 8h8s-4-4-4-8z"/></svg>
+              </div>
+            </div>
+            <div class="category-card__body">
+              <h3>Ohrringe</h3>
+              <p>Creolen, Stecker &amp; Hänger</p>
+              <span class="category-card__arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+
+          <a href="/shop.html?kategorie=armbänder" class="category-card" aria-label="Armbänder entdecken">
+            <div class="category-card__image">
+              <div class="img-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 010 16"/></svg>
+              </div>
+            </div>
+            <div class="category-card__body">
+              <h3>Armbänder</h3>
+              <p>Ketten, Armreifen &amp; Charms</p>
+              <span class="category-card__arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+
+          <a href="/shop.html?kategorie=ketten" class="category-card" aria-label="Ketten entdecken">
+            <div class="category-card__image">
+              <div class="img-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+              </div>
+            </div>
+            <div class="category-card__body">
+              <h3>Ketten</h3>
+              <p>Colliers, Choker &amp; Anhänger</p>
+              <span class="category-card__arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+
+          <a href="/shop.html?kategorie=ringe" class="category-card" aria-label="Ringe entdecken">
+            <div class="category-card__image">
+              <div class="img-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="10"/></svg>
+              </div>
+            </div>
+            <div class="category-card__body">
+              <h3>Ringe</h3>
+              <p>Siegel, Bandringe &amp; Sets</p>
+              <span class="category-card__arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── FEATURED PRODUKTE ── -->
+    <section class="featured section--sm" style="background-color: var(--color-bg-alt);" aria-labelledby="featured-heading">
+      <div class="container">
+        <div class="section-header">
+          <span class="label">Lieblingsstücke</span>
+          <h2 id="featured-heading">Aktuell beliebt</h2>
+        </div>
+        <div class="divider"></div>
+
+        <div class="product-grid" id="featured-grid">
+          <!-- Wird per JS befüllt -->
+          <div class="product-card-skeleton" aria-hidden="true"></div>
+          <div class="product-card-skeleton" aria-hidden="true"></div>
+          <div class="product-card-skeleton" aria-hidden="true"></div>
+          <div class="product-card-skeleton" aria-hidden="true"></div>
+        </div>
+
+        <div class="featured__footer">
+          <a href="/shop.html" class="btn btn--secondary btn--lg">Alle Stücke ansehen</a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── ÜBER UNS ── -->
+    <section class="about section" id="about" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="about__grid">
+          <div class="about__image">
+            <img src="/images/Wer-bin-ich.jpg"
+                 alt="Mandy Egerland — Gründerin von Mandea"
+                 class="about__photo"
+                 loading="lazy">
+          </div>
+
+          <div class="about__content">
+            <span class="label">Die Geschichte dahinter</span>
+            <h2 id="about-heading">Handgemacht.<br>Mit Herz.</h2>
+            <div class="divider divider--left"></div>
+            <p>Hinter Mandea steckt die Überzeugung, dass Schmuck mehr als Dekoration sein kann — er erzählt von dem Menschen, der ihn trägt.</p>
+            <p style="margin-top: var(--space-4);">Jedes Stück entsteht in Handarbeit, mit sorgfältig ausgewählten Materialien und einer Aufmerksamkeit fürs Detail, die keine Fabrik bieten kann. Ob Unikat oder kleine Auflage — Massenware findest du bei mir nicht.</p>
+
+            <div class="about__values" role="list">
+              <div class="about__value" role="listitem">
+                <div class="about__value-icon" aria-hidden="true">✦</div>
+                <div>
+                  <strong>Handgefertigt</strong>
+                  <p>Jedes Stück von Hand gemacht</p>
+                </div>
+              </div>
+              <div class="about__value" role="listitem">
+                <div class="about__value-icon" aria-hidden="true">✦</div>
+                <div>
+                  <strong>Unikate & Kleinserien</strong>
+                  <p>Keine Massenware, bewusst limitiert</p>
+                </div>
+              </div>
+              <div class="about__value" role="listitem">
+                <div class="about__value-icon" aria-hidden="true">✦</div>
+                <div>
+                  <strong>Nachhaltig gedacht</strong>
+                  <p>Sorgfältige Materialwahl, wenig Verschwendung</p>
+                </div>
+              </div>
+            </div>
+
+            <a href="/contact.html" class="btn btn--secondary" style="margin-top: var(--space-8);">Kontakt aufnehmen</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── INSTAGRAM BANNER ── -->
+    <section class="instagram-banner section--sm" aria-labelledby="instagram-heading">
+      <div class="container">
+        <div class="instagram-banner__inner">
+          <div class="instagram-banner__content">
+            <span class="label" style="color: var(--color-gold-light);">Community</span>
+            <h2 id="instagram-heading" style="color: var(--color-bg);">Folge Mandea<br>auf Instagram</h2>
+            <p style="color: var(--color-text-light);">Hinter den Kulissen, neue Stücke zuerst, Styling-Inspirationen.</p>
+            <a href="https://instagram.com/herzenssachen_by_mandy" target="_blank" rel="noopener noreferrer"
+               class="btn btn--primary btn--lg instagram-banner__btn"
+               aria-label="Mandea auf Instagram folgen (öffnet neues Fenster)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              @herzenssachen_by_mandy folgen
+            </a>
+          </div>
+          <div class="instagram-banner__deco" aria-hidden="true">
+            <svg viewBox="0 0 300 300" fill="none">
+              <circle cx="150" cy="150" r="120" stroke="rgba(184,154,106,0.15)" stroke-width="1"/>
+              <circle cx="150" cy="150" r="90"  stroke="rgba(184,154,106,0.20)" stroke-width="1"/>
+              <circle cx="150" cy="150" r="60"  stroke="rgba(184,154,106,0.25)" stroke-width="1"/>
+              <circle cx="150" cy="150" r="8"   fill="rgba(184,154,106,0.4)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── NEWSLETTER / VERTRAUEN ── -->
+    <section class="trust section--sm" aria-labelledby="trust-heading">
+      <div class="container">
+        <h2 id="trust-heading" class="sr-only">Vertrauensmerkmale</h2>
+        <div class="trust__grid" role="list">
+
+          <div class="trust__item" role="listitem">
+            <div class="trust__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            </div>
+            <h3>Handmade</h3>
+            <p>Jedes Stück entsteht in Handarbeit — mit Liebe zum Detail.</p>
+          </div>
+
+          <div class="trust__item" role="listitem">
+            <div class="trust__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <h3>Kostenloser Versand</h3>
+            <p>Ab 60 € Bestellwert liefern wir versandkostenfrei in DE.</p>
+          </div>
+
+          <div class="trust__item" role="listitem">
+            <div class="trust__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Sicher bezahlen</h3>
+            <p>Checkout via Stripe — verschlüsselt und vertrauenswürdig.</p>
+          </div>
+
+          <div class="trust__item" role="listitem">
+            <div class="trust__icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3>Schnelle Lieferung</h3>
+            <p>Versand innerhalb von 2–4 Werktagen aus Deutschland.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+
+        <div class="footer__col">
+          <div class="footer__brand">Man<span>dea</span></div>
+          <p class="footer__tagline">Handgefertigter Modeschmuck — Unikate und Kleinserien mit Seele.</p>
+          <div class="footer__social" aria-label="Social Media">
+            <a href="https://instagram.com/herzenssachen_by_mandy" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer__col">
+          <p class="footer__heading">Shop</p>
+          <nav class="footer__links" aria-label="Shop-Navigation">
+            <a href="/shop.html?kategorie=ohrringe">Ohrringe</a>
+            <a href="/shop.html?kategorie=armbänder">Armbänder</a>
+            <a href="/shop.html?kategorie=ketten">Ketten</a>
+            <a href="/shop.html?kategorie=ringe">Ringe</a>
+          </nav>
+        </div>
+
+        <div class="footer__col">
+          <p class="footer__heading">Info</p>
+          <nav class="footer__links" aria-label="Info-Navigation">
+            <a href="/#about">Über Mandea</a>
+            <a href="/contact.html">Kontakt</a>
+            <a href="/contact.html#versand">Versand & Rückgabe</a>
+          </nav>
+        </div>
+
+        <div class="footer__col">
+          <p class="footer__heading">Rechtliches</p>
+          <nav class="footer__links" aria-label="Rechtliche Links">
+            <a href="/contact.html#impressum">Impressum</a>
+            <a href="/contact.html#datenschutz">Datenschutz</a>
+            <a href="/contact.html#agb">AGB</a>
+          </nav>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <p>© <span id="footer-year">2024</span> Mandea. Alle Rechte vorbehalten.</p>
+        <p>Handmade with ♥ in Deutschland</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <script type="module">
+    import { initNavbar, updateCartBadge, loadProducts, addToCart, formatPrice } from '/js/utils.js';
+
+    initNavbar();
+    updateCartBadge();
+
+    // Footer-Jahr
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    // Featured Produkte laden
+    async function renderFeatured() {
+      const grid = document.getElementById('featured-grid');
+      if (!grid) return;
+
+      try {
+        const products = await loadProducts();
+        const featured = products.filter(p => p.featured).slice(0, 4);
+
+        grid.innerHTML = featured.map(p => `
+          <article class="product-card animate-fadein">
+            <a href="/product.html?id=${p.id}" class="product-card__image" aria-label="${p.name} ansehen">
+              <div class="product-card__image-placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>${p.categoryLabel}</span>
+              </div>
+              ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ''}
+            </a>
+            <div class="product-card__body">
+              <p class="product-card__category">${p.categoryLabel}</p>
+              <h3 class="product-card__name">
+                <a href="/product.html?id=${p.id}">${p.name}</a>
+              </h3>
+              <div class="product-card__footer">
+                <span class="product-card__price">${formatPrice(p.price)}</span>
+                <button class="product-card__add"
+                        aria-label="${p.name} zum Warenkorb hinzufügen"
+                        data-id="${p.id}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        `).join('');
+
+        // Warenkorb-Button-Events
+        grid.querySelectorAll('[data-id]').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const product = featured.find(p => p.id === btn.dataset.id);
+            if (product) addToCart(product);
+          });
+        });
+
+      } catch (err) {
+        grid.innerHTML = `<p style="color: var(--color-text-light); grid-column: 1/-1; text-align: center; padding: var(--space-12);">Produkte konnten nicht geladen werden.</p>`;
+        console.error(err);
+      }
+    }
+
+    renderFeatured();
+  </script>
+
+</body>
+</html>

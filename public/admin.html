@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin — Mandea</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- ── LOGIN ── -->
+  <div class="admin-login" id="login-screen">
+    <div class="admin-login__card">
+      <div class="admin-login__logo">Man<span>dea</span></div>
+      <p class="admin-login__sub">Produkt-Verwaltung</p>
+
+      <form id="login-form" class="admin-login__form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="password-input">Passwort</label>
+          <input class="form-input" type="password" id="password-input"
+                 autocomplete="current-password" placeholder="••••••••" required>
+        </div>
+        <p class="admin-login__error hidden" id="login-error" role="alert">
+          Falsches Passwort. Bitte nochmal versuchen.
+        </p>
+        <button type="submit" class="btn btn--primary btn--full" id="login-btn">
+          Anmelden
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── ADMIN BEREICH ── -->
+  <div class="admin-app hidden" id="admin-app">
+
+    <!-- Header -->
+    <header class="admin-header">
+      <div class="admin-header__logo">Man<span>dea</span> <span class="admin-header__badge">Admin</span></div>
+      <div class="admin-header__actions">
+        <a href="/" target="_blank" class="btn btn--ghost btn--sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Shop ansehen
+        </a>
+        <button class="btn btn--ghost btn--sm" id="logout-btn">Abmelden</button>
+      </div>
+    </header>
+
+    <div class="admin-layout">
+
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <nav class="admin-nav">
+          <button class="admin-nav__item active" data-tab="products">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Produkte
+          </button>
+          <button class="admin-nav__item" data-tab="add">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Neues Produkt
+          </button>
+        </nav>
+
+        <div class="admin-sidebar__save">
+          <button class="btn btn--primary btn--full" id="save-btn" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Änderungen speichern
+          </button>
+          <p class="admin-save__hint" id="save-hint">Keine ungespeicherten Änderungen</p>
+        </div>
+      </aside>
+
+      <!-- Hauptbereich -->
+      <main class="admin-main">
+
+        <!-- Tab: Produkte -->
+        <div class="admin-tab active" id="tab-products">
+          <div class="admin-section-header">
+            <div>
+              <h1>Produkte</h1>
+              <p id="product-count-label">Wird geladen…</p>
+            </div>
+            <div class="admin-section-header__filters">
+              <select class="form-select admin-filter-select" id="filter-category">
+                <option value="alle">Alle Kategorien</option>
+                <option value="ohrringe">Ohrringe</option>
+                <option value="armbänder">Armbänder</option>
+                <option value="ketten">Ketten</option>
+                <option value="ringe">Ringe</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-product-list" id="product-list">
+            <!-- wird per JS befüllt -->
+          </div>
+        </div>
+
+        <!-- Tab: Neues Produkt -->
+        <div class="admin-tab" id="tab-add">
+          <div class="admin-section-header">
+            <div>
+              <h1 id="form-title">Neues Produkt</h1>
+              <p id="form-subtitle">Füll alle Pflichtfelder aus und klicke „Speichern".</p>
+            </div>
+          </div>
+          <div id="product-form-wrap">
+            <!-- Formular wird per JS gerendert -->
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ── MODAL: Löschen bestätigen ── -->
+  <div class="admin-modal-overlay hidden" id="delete-modal">
+    <div class="admin-modal">
+      <h3>Produkt löschen?</h3>
+      <p id="delete-modal-text"></p>
+      <div class="admin-modal__actions">
+        <button class="btn btn--ghost" id="delete-cancel">Abbrechen</button>
+        <button class="btn btn--primary" id="delete-confirm"
+                style="background-color: var(--color-error); border-color: var(--color-error);">
+          Ja, löschen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOAST ── -->
+  <div class="toast-container" id="toast-area"></div>
+
+  <script type="module">
+    // ── Zustand ───────────────────────────────────────────────
+    let products = [];
+    let dirty    = false;    // ungespeicherte Änderungen?
+    let editId   = null;     // ID des gerade bearbeiteten Produkts
+    let token    = sessionStorage.getItem('mandea_admin_token') ?? null;
+
+    // ── DOM-Refs ──────────────────────────────────────────────
+    const loginScreen = document.getElementById('login-screen');
+    const adminApp    = document.getElementById('admin-app');
+    const saveBtn     = document.getElementById('save-btn');
+    const saveHint    = document.getElementById('save-hint');
+
+    // ── Hilfsfunktionen ───────────────────────────────────────
+
+    function formatPrice(cents) {
+      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(cents / 100);
+    }
+
+    function showToast(msg, type = 'info') {
+      const c = document.getElementById('toast-area');
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.textContent = msg;
+      c.appendChild(t);
+      setTimeout(() => { t.classList.add('hiding'); t.addEventListener('animationend', () => t.remove(), { once: true }); }, 3500);
+    }
+
+    function markDirty() {
+      dirty = true;
+      saveBtn.disabled = false;
+      saveHint.textContent = '● Ungespeicherte Änderungen';
+      saveHint.style.color = 'var(--color-terra)';
+    }
+
+    function markClean() {
+      dirty = false;
+      saveBtn.disabled = true;
+      saveHint.textContent = 'Alle Änderungen gespeichert ✓';
+      saveHint.style.color = 'var(--color-success)';
+    }
+
+    function generateId(name, category) {
+      const prefix = { ohrringe: 'ohr', 'armbänder': 'arm', ketten: 'ket', ringe: 'ring' }[category] ?? 'prod';
+      const slug   = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').substring(0, 12);
+      const num    = String(products.filter(p => p.category === category).length + 1).padStart(3, '0');
+      return `${prefix}-${num}`;
+    }
+
+    // ── Tab-Navigation ────────────────────────────────────────
+    document.querySelectorAll('.admin-nav__item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.admin-nav__item').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+
+        if (btn.dataset.tab === 'add') {
+          editId = null;
+          document.getElementById('form-title').textContent = 'Neues Produkt';
+          document.getElementById('form-subtitle').textContent = 'Füll alle Pflichtfelder aus und klicke „Speichern".';
+          renderForm(null);
+        }
+      });
+    });
+
+    // ── Produkt-Liste rendern ─────────────────────────────────
+    function renderList() {
+      const filter = document.getElementById('filter-category').value;
+      const list   = filter === 'alle' ? products : products.filter(p => p.category === filter);
+      const el     = document.getElementById('product-list');
+
+      document.getElementById('product-count-label').textContent =
+        `${products.length} Produkte gesamt`;
+
+      if (list.length === 0) {
+        el.innerHTML = `<div class="admin-empty"><p>Keine Produkte in dieser Kategorie.</p></div>`;
+        return;
+      }
+
+      el.innerHTML = list.map(p => `
+        <div class="admin-product-row ${!p.inStock ? 'admin-product-row--oos' : ''}" data-id="${p.id}">
+
+          <div class="admin-product-row__image">
+            ${p.images?.[0]
+              ? `<img src="${p.images[0]}" alt="${p.name}" loading="lazy">`
+              : `<div class="admin-img-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
+            }
+          </div>
+
+          <div class="admin-product-row__info">
+            <span class="admin-product-row__cat">${p.categoryLabel}</span>
+            <strong class="admin-product-row__name">${p.name}</strong>
+            <span class="admin-product-row__id">${p.id}</span>
+          </div>
+
+          <div class="admin-product-row__price">
+            ${formatPrice(p.price)}
+          </div>
+
+          <div class="admin-product-row__badges">
+            ${p.badge ? `<span class="admin-badge admin-badge--gold">${p.badge}</span>` : ''}
+            ${p.featured ? `<span class="admin-badge admin-badge--blue">Highlight</span>` : ''}
+            ${!p.inStock ? `<span class="admin-badge admin-badge--red">Ausverkauft</span>` : ''}
+          </div>
+
+          <div class="admin-product-row__actions">
+            <label class="admin-toggle" title="${p.inStock ? 'Auf ausverkauft setzen' : 'Als verfügbar markieren'}">
+              <input type="checkbox" class="admin-toggle__input stock-toggle"
+                     data-id="${p.id}" ${p.inStock ? 'checked' : ''}>
+              <span class="admin-toggle__track"></span>
+              <span class="admin-toggle__label">${p.inStock ? 'Verfügbar' : 'Ausverkauft'}</span>
+            </label>
+
+            <button class="btn btn--secondary btn--sm edit-btn" data-id="${p.id}">
+              Bearbeiten
+            </button>
+            <button class="btn btn--ghost btn--sm delete-btn" data-id="${p.id}"
+                    style="color: var(--color-error);">
+              Löschen
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // Events
+      el.querySelectorAll('.stock-toggle').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const p = products.find(x => x.id === cb.dataset.id);
+          if (p) { p.inStock = cb.checked; markDirty(); renderList(); }
+        });
+      });
+
+      el.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => openEdit(btn.dataset.id));
+      });
+
+      el.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => confirmDelete(btn.dataset.id));
+      });
+    }
+
+    document.getElementById('filter-category').addEventListener('change', renderList);
+
+    // ── Produkt-Formular ──────────────────────────────────────
+    function renderForm(product) {
+      const p = product ?? {
+        id: '', name: '', category: 'ohrringe', categoryLabel: 'Ohrringe',
+        price: '', description: '', details: ['', '', '', ''],
+        badge: '', images: [], inStock: true, featured: false,
+      };
+
+      document.getElementById('product-form-wrap').innerHTML = `
+        <form class="admin-product-form" id="product-form" novalidate>
+
+          <div class="admin-form-grid">
+
+            <div class="admin-form-section">
+              <h3 class="admin-form-section-title">Basisinformationen</h3>
+
+              <div class="form-group">
+                <label class="form-label" for="pf-name">Name *</label>
+                <input class="form-input" type="text" id="pf-name" value="${p.name}" required
+                       placeholder="z.B. Sonnenblüte Ohrhänger">
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="pf-category">Kategorie *</label>
+                  <select class="form-select" id="pf-category" required>
+                    <option value="ohrringe"   ${p.category==='ohrringe'   ? 'selected':''}>Ohrringe</option>
+                    <option value="armbänder"  ${p.category==='armbänder'  ? 'selected':''}>Armbänder</option>
+                    <option value="ketten"     ${p.category==='ketten'     ? 'selected':''}>Ketten</option>
+                    <option value="ringe"      ${p.category==='ringe'      ? 'selected':''}>Ringe</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="pf-price">Preis in € *</label>
+                  <input class="form-input" type="number" id="pf-price" step="0.01" min="0"
+                         value="${p.price ? (p.price/100).toFixed(2) : ''}" required placeholder="39.00">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pf-desc">Beschreibung *</label>
+                <textarea class="form-textarea" id="pf-desc" required rows="4"
+                          placeholder="Beschreibe das Stück — Material, Feeling, Besonderheiten…">${p.description}</textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pf-badge">Badge (optional)</label>
+                <select class="form-select" id="pf-badge">
+                  <option value="">Kein Badge</option>
+                  <option value="Neu"        ${p.badge==='Neu'        ? 'selected':''}>Neu</option>
+                  <option value="Unikat"     ${p.badge==='Unikat'     ? 'selected':''}>Unikat</option>
+                  <option value="Bestseller" ${p.badge==='Bestseller' ? 'selected':''}>Bestseller</option>
+                  <option value="Set"        ${p.badge==='Set'        ? 'selected':''}>Set</option>
+                  <option value="Sale"       ${p.badge==='Sale'       ? 'selected':''}>Sale</option>
+                </select>
+              </div>
+
+              <div class="admin-checkboxes">
+                <label class="admin-checkbox-label">
+                  <input type="checkbox" id="pf-featured" ${p.featured ? 'checked':''}>
+                  <span>Auf Startseite hervorheben (Highlight)</span>
+                </label>
+                <label class="admin-checkbox-label">
+                  <input type="checkbox" id="pf-instock" ${p.inStock ? 'checked':''}>
+                  <span>Verfügbar (Lagernd)</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="admin-form-section">
+              <h3 class="admin-form-section-title">Details & Fotos</h3>
+
+              <div class="form-group">
+                <label class="form-label">Produktdetails (4 Zeilen, z.B. Material, Maße, Verschluss)</label>
+                ${[0,1,2,3].map(i => `
+                  <input class="form-input admin-detail-input" type="text"
+                         id="pf-detail-${i}" placeholder="Detail ${i+1}…"
+                         value="${p.details?.[i] ?? ''}"
+                         style="margin-bottom: var(--space-2);">
+                `).join('')}
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Produktfotos</label>
+                <div class="admin-image-section">
+                  <div class="admin-image-grid" id="image-grid">
+                    ${(p.images ?? []).map((img, i) => `
+                      <div class="admin-image-item" data-index="${i}">
+                        <img src="${img}" alt="Foto ${i+1}">
+                        <button type="button" class="admin-image-remove" data-index="${i}" aria-label="Foto entfernen">×</button>
+                      </div>
+                    `).join('')}
+                    <div class="admin-image-placeholder" id="add-image-btn">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                      <span>Foto hinzufügen</span>
+                    </div>
+                  </div>
+
+                  <div class="admin-image-url-add hidden" id="image-url-input">
+                    <input class="form-input" type="text" id="image-url" placeholder="/images/products/mein-foto.jpg">
+                    <button type="button" class="btn btn--secondary btn--sm" id="image-url-confirm">Hinzufügen</button>
+                    <button type="button" class="btn btn--ghost btn--sm" id="image-url-cancel">Abbrechen</button>
+                  </div>
+
+                  <p class="admin-image-hint">
+                    Fotos zuerst in <code>/public/images/products/</code> ablegen, dann hier den Pfad eingeben.<br>
+                    Empfehlung: WebP-Format, max. 800 KB, Seitenverhältnis 3:4.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="admin-form-footer">
+            <button type="button" class="btn btn--ghost" id="form-cancel-btn">Abbrechen</button>
+            <button type="submit" class="btn btn--primary btn--lg" id="form-save-btn">
+              ${editId ? 'Änderungen übernehmen' : 'Produkt anlegen'}
+            </button>
+          </div>
+
+        </form>
+      `;
+
+      // Bild-Events
+      let currentImages = [...(p.images ?? [])];
+
+      function refreshImageGrid() {
+        const grid = document.getElementById('image-grid');
+        grid.innerHTML = currentImages.map((img, i) => `
+          <div class="admin-image-item" data-index="${i}">
+            <img src="${img}" alt="Foto ${i+1}">
+            <button type="button" class="admin-image-remove" data-index="${i}" aria-label="Foto entfernen">×</button>
+          </div>
+        `).join('') + `
+          <div class="admin-image-placeholder" id="add-image-btn">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Foto hinzufügen</span>
+          </div>`;
+
+        grid.querySelectorAll('.admin-image-remove').forEach(btn => {
+          btn.addEventListener('click', () => {
+            currentImages.splice(Number(btn.dataset.index), 1);
+            refreshImageGrid();
+          });
+        });
+
+        document.getElementById('add-image-btn').addEventListener('click', () => {
+          document.getElementById('image-url-input').classList.remove('hidden');
+        });
+      }
+
+      refreshImageGrid();
+
+      document.getElementById('image-url-confirm').addEventListener('click', () => {
+        const val = document.getElementById('image-url').value.trim();
+        if (val) { currentImages.push(val); refreshImageGrid(); }
+        document.getElementById('image-url-input').classList.add('hidden');
+        document.getElementById('image-url').value = '';
+      });
+
+      document.getElementById('image-url-cancel').addEventListener('click', () => {
+        document.getElementById('image-url-input').classList.add('hidden');
+      });
+
+      // Formular absenden
+      document.getElementById('product-form').addEventListener('submit', e => {
+        e.preventDefault();
+
+        const catMap = { ohrringe: 'Ohrringe', 'armbänder': 'Armbänder', ketten: 'Ketten', ringe: 'Ringe' };
+        const category = document.getElementById('pf-category').value;
+        const name     = document.getElementById('pf-name').value.trim();
+        const priceVal = parseFloat(document.getElementById('pf-price').value);
+
+        if (!name || isNaN(priceVal) || priceVal <= 0) {
+          showToast('Bitte Name und Preis ausfüllen.', 'error');
+          return;
+        }
+
+        const details = [0,1,2,3]
+          .map(i => document.getElementById(`pf-detail-${i}`).value.trim())
+          .filter(Boolean);
+
+        const updated = {
+          id:            editId ?? generateId(name, category),
+          name,
+          category,
+          categoryLabel: catMap[category],
+          price:         Math.round(priceVal * 100),
+          priceFormatted: new Intl.NumberFormat('de-DE', {style:'currency',currency:'EUR'}).format(priceVal),
+          description:   document.getElementById('pf-desc').value.trim(),
+          details,
+          badge:         document.getElementById('pf-badge').value || null,
+          images:        currentImages,
+          inStock:       document.getElementById('pf-instock').checked,
+          featured:      document.getElementById('pf-featured').checked,
+        };
+
+        if (editId) {
+          const idx = products.findIndex(x => x.id === editId);
+          if (idx !== -1) products[idx] = updated;
+          showToast(`„${updated.name}" wurde aktualisiert.`, 'success');
+        } else {
+          products.push(updated);
+          showToast(`„${updated.name}" wurde angelegt.`, 'success');
+        }
+
+        markDirty();
+        editId = null;
+
+        // Zurück zur Liste
+        document.querySelector('[data-tab="products"]').click();
+      });
+
+      document.getElementById('form-cancel-btn').addEventListener('click', () => {
+        document.querySelector('[data-tab="products"]').click();
+      });
+    }
+
+    // ── Bearbeiten öffnen ─────────────────────────────────────
+    function openEdit(id) {
+      editId = id;
+      const p = products.find(x => x.id === id);
+      document.getElementById('form-title').textContent = `Bearbeiten: ${p.name}`;
+      document.getElementById('form-subtitle').textContent = 'Änderungen werden erst nach „Speichern" veröffentlicht.';
+      renderForm(p);
+      document.querySelector('[data-tab="add"]').click();
+    }
+
+    // ── Löschen ───────────────────────────────────────────────
+    let pendingDeleteId = null;
+
+    function confirmDelete(id) {
+      const p = products.find(x => x.id === id);
+      pendingDeleteId = id;
+      document.getElementById('delete-modal-text').textContent =
+        `Möchtest du „${p.name}" wirklich dauerhaft löschen? Das kann nicht rückgängig gemacht werden.`;
+      document.getElementById('delete-modal').classList.remove('hidden');
+    }
+
+    document.getElementById('delete-cancel').addEventListener('click', () => {
+      document.getElementById('delete-modal').classList.add('hidden');
+      pendingDeleteId = null;
+    });
+
+    document.getElementById('delete-confirm').addEventListener('click', () => {
+      const p = products.find(x => x.id === pendingDeleteId);
+      products = products.filter(x => x.id !== pendingDeleteId);
+      pendingDeleteId = null;
+      document.getElementById('delete-modal').classList.add('hidden');
+      markDirty();
+      renderList();
+      showToast(`„${p.name}" wurde gelöscht.`, 'info');
+    });
+
+    // ── Speichern via Netlify Function ────────────────────────
+    saveBtn.addEventListener('click', async () => {
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Wird gespeichert…';
+
+      try {
+        const res = await fetch('/.netlify/functions/admin-save', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ token, products }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message ?? `Fehler ${res.status}`);
+        }
+
+        markClean();
+        showToast('Gespeichert! Die Website wird in ~30 Sekunden aktualisiert.', 'success');
+        renderList();
+
+      } catch (err) {
+        showToast(`Speichern fehlgeschlagen: ${err.message}`, 'error');
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Änderungen speichern`;
+      }
+    });
+
+    // ── Login ─────────────────────────────────────────────────
+    document.getElementById('login-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn');
+      const pwd = document.getElementById('password-input').value;
+      const err = document.getElementById('login-error');
+
+      btn.disabled = true;
+      btn.textContent = 'Prüfe…';
+      err.classList.add('hidden');
+
+      try {
+        const res  = await fetch('/.netlify/functions/admin-auth', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ password: pwd }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message);
+
+        token = data.token;
+        sessionStorage.setItem('mandea_admin_token', token);
+        loginScreen.classList.add('hidden');
+        adminApp.classList.remove('hidden');
+        await loadProducts();
+
+      } catch {
+        err.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Anmelden';
+        document.getElementById('password-input').value = '';
+        document.getElementById('password-input').focus();
+      }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      sessionStorage.removeItem('mandea_admin_token');
+      token = null;
+      adminApp.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+    });
+
+    // ── Produkte laden ────────────────────────────────────────
+    async function loadProducts() {
+      try {
+        const res  = await fetch('/products.json');
+        const data = await res.json();
+        products = data.products;
+        renderList();
+        renderForm(null);
+      } catch (err) {
+        showToast('Produkte konnten nicht geladen werden.', 'error');
+      }
+    }
+
+    // ── Auto-Login falls Token in Session ────────────────────
+    async function init() {
+      if (!token) return; // bleibt auf Login
+
+      // Token kurz prüfen
+      try {
+        const res = await fetch('/.netlify/functions/admin-auth', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ token }),
+        });
+        if (res.ok) {
+          loginScreen.classList.add('hidden');
+          adminApp.classList.remove('hidden');
+          await loadProducts();
+        } else {
+          sessionStorage.removeItem('mandea_admin_token');
+          token = null;
+        }
+      } catch {
+        // offline oder Function nicht verfügbar — Login zeigen
+      }
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

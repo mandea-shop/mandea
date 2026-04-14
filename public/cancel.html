@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Zahlung abgebrochen — Mandea</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/status.css">
+</head>
+<body>
+
+  <header class="navbar" role="banner">
+    <div class="container navbar__inner">
+      <a href="/" class="navbar__logo">Man<span>dea</span></a>
+      <nav class="navbar__nav" aria-label="Hauptnavigation">
+        <a href="/"             class="navbar__link">Start</a>
+        <a href="/shop.html"    class="navbar__link">Shop</a>
+        <a href="/contact.html" class="navbar__link">Kontakt</a>
+      </nav>
+      <div class="navbar__actions">
+        <a href="/cart.html" class="cart-icon" aria-label="Warenkorb">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge" aria-live="polite"></span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="status-page">
+    <div class="container">
+      <div class="status-card status-card--cancel animate-fadein-scale">
+
+        <div class="status-card__icon status-card__icon--cancel" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        </div>
+
+        <span class="label" style="color: var(--color-text-light);">Zahlung abgebrochen</span>
+        <h1>Kein Problem — dein Warenkorb wartet</h1>
+
+        <div class="divider"></div>
+
+        <p class="status-card__text">
+          Du hast den Bezahlvorgang abgebrochen. Deine Artikel sind noch in deinem Warenkorb gespeichert —
+          du kannst jederzeit weitermachen.
+        </p>
+
+        <div class="status-card__actions">
+          <a href="/cart.html"  class="btn btn--primary btn--lg">Zurück zum Warenkorb</a>
+          <a href="/shop.html"  class="btn btn--ghost btn--lg">Weiter stöbern</a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__bottom" style="border-top: none; padding-top: 0;">
+        <p>© <span id="footer-year"></span> Mandea. Alle Rechte vorbehalten.</p>
+        <p>Handmade with ♥ in Deutschland</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initNavbar, updateCartBadge } from '/js/utils.js';
+    initNavbar();
+    updateCartBadge();
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
