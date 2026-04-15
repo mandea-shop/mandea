@@ -4,7 +4,8 @@
       "id": "ohrringe",
       "label": "Ohrringe",
       "idPrefix": "ohr",
-      "image": "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/screenshot_20260328_074447_gallery.jpg"
+      "image": "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/screenshot_20260328_074447_gallery.jpg",
+      "description": "auch Sets"
     },
     {
       "id": "armbänder",
