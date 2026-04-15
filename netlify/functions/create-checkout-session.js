@@ -213,7 +213,7 @@ export const handler = async (event) => {
       locale:                'de',
       success_url:           `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:            `${baseUrl}/cancel.html`,
-      payment_method_types:  ['card', 'paypal', 'klarna', 'eps'],
+      automatic_payment_methods: { enabled: true },
       metadata: {
         source: 'mandea-shop',
       },
