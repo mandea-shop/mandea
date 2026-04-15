@@ -69,8 +69,36 @@
       "name": "Blütenranken Armband",
       "category": "armbänder",
       "categoryLabel": "Armbänder",
-      "price": 5500,
-      "priceFormatted": "55,00 €",
+      "price": 1500,
+      "priceFormatted": "15,00 €",
+      "stock": null,
+      "inStock": true,
+      "variants": [
+        {
+          "size": "S",
+          "price": 1500,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "M",
+          "price": 1500,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "L",
+          "price": 1600,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "XL",
+          "price": 1600,
+          "stock": null,
+          "inStock": true
+        }
+      ],
       "description": "Filigranes Armband mit handgeprägten Blütenranken — jedes Stück trägt eine leicht andere Prägung, was es zum echten Unikat macht. Mit Verlängerungskette.",
       "details": [
         "Material: Metallegierung, goldbeschichtet",
@@ -82,7 +110,6 @@
       "images": [
         "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/straberry.jpg"
       ],
-      "inStock": true,
       "featured": true
     },
     {
