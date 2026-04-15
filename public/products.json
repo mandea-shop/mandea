@@ -230,19 +230,24 @@
     },
     {
       "id": "arm-004",
-      "name": "Sonnenblüten Armand",
+      "name": "Sonnenblüten Armband",
       "category": "armbänder",
       "categoryLabel": "Armbänder",
-      "price": 3897,
-      "priceFormatted": "38,97 €",
+      "price": 3900,
+      "priceFormatted": "39,00 €",
       "description": "Super geiles Teil",
-      "details": [],
+      "details": [
+        "Aus echten Sonnenblüten",
+        "handmade",
+        "Mondverschluß",
+        "sehr heiß"
+      ],
       "badge": "Neu",
       "images": [
-        "/images/products/AB-01.png"
+        "/images/products/ab-01.png"
       ],
       "inStock": true,
-      "featured": false
+      "featured": true
     }
   ]
 }
