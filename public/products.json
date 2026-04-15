@@ -229,23 +229,23 @@
       "featured": true
     },
     {
-      "id": "ohr-004",
+      "id": "kind-001",
       "name": "Sonnenblüten Armband",
-      "category": "ohrringe",
-      "categoryLabel": "Ohrringe",
-      "price": 32200,
-      "priceFormatted": "322,00 €",
-      "description": "schönes Teil",
+      "category": "kinderschmuck",
+      "categoryLabel": "Kinderschmuck",
+      "price": 23100,
+      "priceFormatted": "231,00 €",
+      "description": "asdf",
       "details": [
         "asdf",
-        "Hugo"
+        "handmade"
       ],
-      "badge": "Bestseller",
+      "badge": null,
       "images": [
         "/images/products/ab-01.png"
       ],
       "inStock": true,
-      "featured": true
+      "featured": false
     }
   ]
 }
