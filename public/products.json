@@ -227,6 +227,25 @@
       "images": [],
       "inStock": true,
       "featured": true
+    },
+    {
+      "id": "ohr-004",
+      "name": "Sonnenblüten Armband",
+      "category": "ohrringe",
+      "categoryLabel": "Ohrringe",
+      "price": 32200,
+      "priceFormatted": "322,00 €",
+      "description": "schönes Teil",
+      "details": [
+        "asdf",
+        "Hugo"
+      ],
+      "badge": "Bestseller",
+      "images": [
+        "/images/products/ab-01.png"
+      ],
+      "inStock": true,
+      "featured": true
     }
   ]
 }
