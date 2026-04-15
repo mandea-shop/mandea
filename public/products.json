@@ -227,27 +227,6 @@
       "images": [],
       "inStock": true,
       "featured": true
-    },
-    {
-      "id": "arm-004",
-      "name": "Sonnenblüten Armband",
-      "category": "kinderschmuck",
-      "categoryLabel": "Kinderschmuck",
-      "price": 3900,
-      "priceFormatted": "39,00 €",
-      "description": "Super geiles Teil",
-      "details": [
-        "Kind 1",
-        "Hugo",
-        "2134",
-        "superhot"
-      ],
-      "badge": "Unikat",
-      "images": [
-        "/images/products/ab-01.png"
-      ],
-      "inStock": true,
-      "featured": true
     }
   ]
 }
