@@ -237,17 +237,17 @@
       "priceFormatted": "39,00 €",
       "description": "Super geiles Teil",
       "details": [
-        "asdf",
-        "33",
-        "1234",
-        "5gasd"
+        "Kind 1",
+        "Hugo",
+        "2134",
+        "superhot"
       ],
-      "badge": "Neu",
+      "badge": "Unikat",
       "images": [
         "/images/products/ab-01.png"
       ],
       "inStock": true,
-      "featured": false
+      "featured": true
     }
   ]
 }
