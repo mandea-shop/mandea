@@ -45,6 +45,8 @@ async function loadProducts() {
 }
 
 const ALLOWED_ORIGINS = [
+  'https://mandea-shop.de',
+  'https://www.mandea-shop.de',
   'https://mandea.netlify.app',
   'https://mandea.de',
   'https://www.mandea.de',
