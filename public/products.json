@@ -231,16 +231,16 @@
     {
       "id": "arm-004",
       "name": "Sonnenblüten Armband",
-      "category": "armbänder",
-      "categoryLabel": "Armbänder",
+      "category": "kinderschmuck",
+      "categoryLabel": "Kinderschmuck",
       "price": 3900,
       "priceFormatted": "39,00 €",
       "description": "Super geiles Teil",
       "details": [
         "asdf",
-        "asdf",
-        "fa",
-        "asd"
+        "33",
+        "1234",
+        "5gasd"
       ],
       "badge": "Neu",
       "images": [
