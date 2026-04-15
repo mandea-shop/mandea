@@ -124,6 +124,16 @@
               <ul id="details-list"></ul>
             </div>
 
+            <!-- Größen-Selektor (nur bei Varianten) -->
+            <div class="product-detail__sizes hidden" id="size-selector-wrap">
+              <label class="form-label">Größe wählen</label>
+              <div class="size-selector" id="size-selector" role="group" aria-label="Größe wählen"></div>
+              <p class="product-detail__size-hint hidden" id="size-hint">Bitte wähle zuerst eine Größe.</p>
+            </div>
+
+            <!-- Lagerbestand-Hinweis -->
+            <p class="product-detail__stock-warning hidden" id="stock-warning"></p>
+
             <!-- Menge -->
             <div class="product-detail__qty">
               <label class="form-label" for="qty-input">Anzahl</label>
@@ -332,9 +342,62 @@
           }
         }
 
-        // Warenkorb-Button
+        // ── Größenvarianten ───────────────────────────────────
+        const hasVariants  = product.variants?.length > 0;
+        let   selectedSize = null;
+        const stockWarning = document.getElementById('stock-warning');
+        const sizeHint     = document.getElementById('size-hint');
+
+        if (hasVariants) {
+          const sizeWrap     = document.getElementById('size-selector-wrap');
+          const sizeSelector = document.getElementById('size-selector');
+          sizeWrap.classList.remove('hidden');
+
+          sizeSelector.innerHTML = product.variants.map(v => `
+            <button type="button" class="size-btn" data-size="${v.size}" data-price="${v.price}"
+                    ${!v.inStock ? 'disabled aria-disabled="true"' : ''}>
+              ${v.size}
+            </button>`).join('');
+
+          sizeSelector.querySelectorAll('.size-btn:not([disabled])').forEach(btn => {
+            btn.addEventListener('click', () => {
+              sizeSelector.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+              selectedSize = btn.dataset.size;
+              const price  = parseInt(btn.dataset.price, 10);
+
+              // Preis aktualisieren
+              document.getElementById('product-price').textContent = formatPrice(price);
+
+              // Lagerbestand-Hinweis für diese Variante
+              const variant = product.variants.find(v => v.size === selectedSize);
+              const s = variant?.stock;
+              if (s !== null && s !== undefined && s > 0 && s < 3) {
+                stockWarning.textContent = `Nur noch ${s} verfügbar`;
+                stockWarning.classList.remove('hidden');
+              } else {
+                stockWarning.classList.add('hidden');
+              }
+              sizeHint.classList.add('hidden');
+            });
+          });
+        } else {
+          // Lagerbestand-Hinweis für Produkte ohne Varianten
+          const s = product.stock;
+          if (s !== null && s !== undefined && s > 0 && s < 3) {
+            stockWarning.textContent = `Nur noch ${s} verfügbar`;
+            stockWarning.classList.remove('hidden');
+          }
+        }
+
+        // ── Warenkorb-Button ──────────────────────────────────
         document.getElementById('add-to-cart-btn').addEventListener('click', () => {
-          addToCart(product, qty);
+          if (hasVariants && !selectedSize) {
+            sizeHint.classList.remove('hidden');
+            document.getElementById('size-selector-wrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+          }
+          addToCart(product, qty, selectedSize);
         });
 
         // Anzeige

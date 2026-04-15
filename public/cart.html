@@ -189,8 +189,10 @@
     function renderItems(cart) {
       const list = document.getElementById('cart-items-list');
 
-      list.innerHTML = cart.map(item => `
-        <article class="cart-page-item" role="listitem" data-id="${item.id}">
+      list.innerHTML = cart.map(item => {
+        const key = item.cartKey ?? item.id;
+        return `
+        <article class="cart-page-item" role="listitem" data-key="${key}">
           <div class="cart-page-item__image">
             ${item.image
               ? `<img src="${item.image}" alt="${item.name}" loading="lazy">`
@@ -205,44 +207,44 @@
             <h2 class="cart-page-item__name">
               <a href="/product.html?id=${item.id}">${item.name}</a>
             </h2>
+            ${item.size ? `<p class="cart-page-item__size">Größe: <strong>${item.size}</strong></p>` : ''}
             <p class="cart-page-item__unit-price">${formatPrice(item.price)} / Stück</p>
           </div>
 
           <div class="cart-page-item__controls">
             <div class="qty-control">
-              <button class="qty-btn" data-action="decrease" data-id="${item.id}"
+              <button class="qty-btn" data-action="decrease" data-key="${key}"
                       aria-label="Anzahl von ${item.name} verringern">−</button>
               <span aria-label="Anzahl: ${item.qty}">${item.qty}</span>
-              <button class="qty-btn" data-action="increase" data-id="${item.id}"
+              <button class="qty-btn" data-action="increase" data-key="${key}"
                       aria-label="Anzahl von ${item.name} erhöhen">+</button>
             </div>
 
             <span class="cart-page-item__subtotal">${formatPrice(item.price * item.qty)}</span>
 
-            <button class="cart-page-item__remove" data-id="${item.id}"
+            <button class="cart-page-item__remove" data-key="${key}"
                     aria-label="${item.name} aus dem Warenkorb entfernen">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
             </button>
           </div>
-        </article>
-      `).join('');
+        </article>`; }).join('');
 
       // Event-Delegation für Mengentasten & Entfernen
       list.addEventListener('click', e => {
-        const btn = e.target.closest('[data-action], [data-id].cart-page-item__remove');
+        const btn = e.target.closest('[data-action], .cart-page-item__remove');
         if (!btn) return;
 
-        const id = btn.dataset.id;
+        const key  = btn.dataset.key;
         const cart = getCart();
-        const item = cart.find(i => i.id === id);
+        const item = cart.find(i => (i.cartKey ?? i.id) === key);
 
         if (btn.classList.contains('cart-page-item__remove')) {
-          removeFromCart(id);
+          removeFromCart(key);
           showToast('Artikel entfernt.', 'info', 2000);
         } else if (btn.dataset.action === 'decrease') {
-          if (item) updateQty(id, item.qty - 1);
+          if (item) updateQty(key, item.qty - 1);
         } else if (btn.dataset.action === 'increase') {
-          if (item && item.qty < 10) updateQty(id, item.qty + 1);
+          if (item && item.qty < 10) updateQty(key, item.qty + 1);
         }
 
         render();
@@ -258,7 +260,7 @@
       const lines = document.getElementById('summary-lines');
       lines.innerHTML = cart.map(item => `
         <div class="cart-summary__line">
-          <span>${item.name} × ${item.qty}</span>
+          <span>${item.name}${item.size ? ` (${item.size})` : ''} × ${item.qty}</span>
           <span>${formatPrice(item.price * item.qty)}</span>
         </div>
       `).join('');

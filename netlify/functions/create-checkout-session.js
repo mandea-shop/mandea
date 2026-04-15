@@ -115,7 +115,7 @@ export const handler = async (event) => {
   // Der Client-Preis wird IGNORIERT — nur der Server-Preis gilt.
   let catalog;
   try {
-    catalog = loadProducts();
+    catalog = await loadProducts();
   } catch (err) {
     console.error('products.json konnte nicht geladen werden:', err);
     return {
@@ -125,7 +125,9 @@ export const handler = async (event) => {
     };
   }
 
-  const lineItems = [];
+  const lineItems  = [];
+  const itemsMeta  = []; // für Webhook: [{id, size, qty}]
+
   for (const item of items) {
     const product = catalog.find(p => p.id === item.id);
 
@@ -134,14 +136,6 @@ export const handler = async (event) => {
         statusCode: 400,
         headers: corsHeaders,
         body: JSON.stringify({ message: `Produkt „${item.id}" nicht gefunden.` }),
-      };
-    }
-
-    if (!product.inStock) {
-      return {
-        statusCode: 400,
-        headers: corsHeaders,
-        body: JSON.stringify({ message: `„${product.name}" ist leider nicht mehr verfügbar.` }),
       };
     }
 
@@ -154,15 +148,58 @@ export const handler = async (event) => {
       };
     }
 
+    // Variante auflösen
+    let unitPrice = product.price;
+    let itemName  = product.name;
+    const size    = item.size ?? null;
+
+    if (product.variants?.length) {
+      if (!size) {
+        return {
+          statusCode: 400,
+          headers: corsHeaders,
+          body: JSON.stringify({ message: `Bitte Größe für „${product.name}" wählen.` }),
+        };
+      }
+      const variant = product.variants.find(v => v.size === size);
+      if (!variant) {
+        return {
+          statusCode: 400,
+          headers: corsHeaders,
+          body: JSON.stringify({ message: `Größe „${size}" für „${product.name}" nicht gefunden.` }),
+        };
+      }
+      if (!variant.inStock || (variant.stock !== null && variant.stock <= 0)) {
+        return {
+          statusCode: 400,
+          headers: corsHeaders,
+          body: JSON.stringify({ message: `Größe „${size}" von „${product.name}" ist ausverkauft.` }),
+        };
+      }
+      unitPrice = variant.price;
+      itemName  = `${product.name} (Größe: ${size})`;
+    } else {
+      if (!product.inStock || (product.stock !== null && product.stock <= 0)) {
+        return {
+          statusCode: 400,
+          headers: corsHeaders,
+          body: JSON.stringify({ message: `„${product.name}" ist leider nicht mehr verfügbar.` }),
+        };
+      }
+    }
+
+    itemsMeta.push({ id: product.id, size, qty });
+
     lineItems.push({
       price_data: {
         currency:     'eur',
-        unit_amount:  product.price,   // Cent aus der Server-Datei
+        unit_amount:  unitPrice,
         product_data: {
-          name:        product.name,
+          name:        itemName,
           description: product.description.substring(0, 500),
           metadata: {
             mandea_id: product.id,
+            size:      size ?? '',
             category:  product.category,
           },
         },
@@ -215,9 +252,9 @@ export const handler = async (event) => {
       locale:                'de',
       success_url:           `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:            `${baseUrl}/cancel.html`,
-      automatic_payment_methods: { enabled: true },
       metadata: {
         source: 'mandea-shop',
+        items:  JSON.stringify(itemsMeta),
       },
     });
 

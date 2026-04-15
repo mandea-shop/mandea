@@ -213,6 +213,93 @@
   top: 3px;
 }
 
+/* ── GRÖSSEN-SELEKTOR ────────────────────────────────────── */
+
+.product-detail__sizes {
+  margin-bottom: var(--space-5);
+}
+
+.product-detail__sizes .form-label {
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+.size-selector {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.size-btn {
+  min-width: 52px;
+  height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-card);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--transition-base), background var(--transition-base), color var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: var(--tracking-wide);
+}
+
+.size-btn:hover:not(:disabled) {
+  border-color: var(--color-gold);
+  background: var(--color-blush-light);
+}
+
+.size-btn.active {
+  border-color: var(--color-gold);
+  background: var(--color-gold);
+  color: #FFFCF8;
+}
+
+.size-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.product-detail__size-hint {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-error, #c0392b);
+  font-weight: var(--weight-medium);
+}
+
+/* ── LAGERBESTAND-HINWEIS ─────────────────────────────────── */
+
+.product-detail__stock-warning {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-terra);
+  margin-bottom: var(--space-4);
+}
+
+.product-detail__stock-warning::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-terra);
+  flex-shrink: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
 /* ── MENGENSTEUERUNG ─────────────────────────────────────── */
 
 .product-detail__qty {

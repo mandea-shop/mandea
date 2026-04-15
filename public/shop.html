@@ -204,7 +204,23 @@
       return list;
     }
 
+    function getStockBadge(p) {
+      if (p.variants?.length) {
+        const avail = p.variants.filter(v => v.inStock && (v.stock == null || v.stock > 0));
+        if (!avail.length) return `<span class="product-card__badge product-card__badge--oos">Ausverkauft</span>`;
+        const minStock = Math.min(...avail.filter(v => v.stock != null).map(v => v.stock));
+        if (isFinite(minStock) && minStock < 3) return `<span class="product-card__badge product-card__badge--stock">Nur noch ${minStock}</span>`;
+      } else {
+        const s = p.stock;
+        if (!p.inStock || s === 0) return `<span class="product-card__badge product-card__badge--oos">Ausverkauft</span>`;
+        if (s != null && s > 0 && s < 3) return `<span class="product-card__badge product-card__badge--stock">Nur noch ${s}</span>`;
+      }
+      return '';
+    }
+
     function renderCard(p) {
+      const hasVariants = p.variants?.length > 0;
+      const stockBadge  = getStockBadge(p);
       return `
         <article class="product-card animate-fadein" data-id="${p.id}">
           <a href="/product.html?id=${p.id}" class="product-card__image" aria-label="${p.name} ansehen">
@@ -216,6 +232,7 @@
                 </div>`
             }
             ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ''}
+            ${stockBadge}
           </a>
           <div class="product-card__body">
             <p class="product-card__category">${p.categoryLabel}</p>
@@ -225,11 +242,17 @@
             <p class="product-card__desc">${p.description.substring(0, 80)}…</p>
             <div class="product-card__footer">
               <span class="product-card__price">${formatPrice(p.price)}</span>
-              <button class="product-card__add"
-                      aria-label="${p.name} zum Warenkorb hinzufügen"
-                      data-id="${p.id}">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </button>
+              ${hasVariants
+                ? `<a href="/product.html?id=${p.id}" class="product-card__add"
+                      aria-label="${p.name} konfigurieren">
+                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+                   </a>`
+                : `<button class="product-card__add"
+                           aria-label="${p.name} zum Warenkorb hinzufügen"
+                           data-id="${p.id}">
+                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                   </button>`
+              }
             </div>
           </div>
         </article>`;

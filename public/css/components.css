@@ -406,6 +406,26 @@
   border-radius: var(--radius-full);
 }
 
+/* Badge-Varianten */
+.product-card__badge + .product-card__badge {
+  top: calc(var(--space-3) + 28px);
+}
+
+.product-card__badge--oos {
+  background-color: var(--color-text-light);
+}
+
+.product-card__badge--stock {
+  background-color: var(--color-terra, #c0643c);
+}
+
+/* Größe-Info im Warenkorb */
+.cart-page-item__size {
+  font-size: var(--text-sm);
+  color: var(--color-text-light);
+  margin-top: var(--space-1);
+}
+
 .product-card__body {
   padding: var(--space-5);
 }

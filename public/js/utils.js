@@ -172,39 +172,55 @@ export function saveCart(cart) {
   window.dispatchEvent(new CustomEvent('mandea:cart-update', { detail: { cart } }));
 }
 
-export function addToCart(product, qty = 1) {
-  const cart = getCart();
-  const existing = cart.find(i => i.id === product.id);
+// Eindeutiger Warenkorb-Schlüssel: bei Varianten "id::Größe", sonst "id"
+function makeCartKey(id, size) {
+  return size ? `${id}::${size}` : id;
+}
 
+export function addToCart(product, qty = 1, size = null) {
+  const cart    = getCart();
+  const cartKey = makeCartKey(product.id, size);
+
+  // Preis aus Variante, falls Größe gewählt
+  let price = product.price;
+  if (size && product.variants?.length) {
+    const variant = product.variants.find(v => v.size === size);
+    if (variant) price = variant.price;
+  }
+
+  const existing = cart.find(i => (i.cartKey ?? i.id) === cartKey);
   if (existing) {
     existing.qty += qty;
   } else {
     cart.push({
-      id:           product.id,
-      name:         product.name,
-      category:     product.categoryLabel,
-      price:        product.price,
-      image:        product.images?.[0] ?? null,
+      cartKey,
+      id:       product.id,
+      name:     product.name,
+      category: product.categoryLabel,
+      price,
+      image:    product.images?.[0] ?? null,
       qty,
+      size,
     });
   }
 
   saveCart(cart);
-  showToast(`„${product.name}" wurde zum Warenkorb hinzugefügt.`, 'success');
+  const sizeStr = size ? ` (Größe: ${size})` : '';
+  showToast(`„${product.name}${sizeStr}" wurde zum Warenkorb hinzugefügt.`, 'success');
 }
 
-export function removeFromCart(productId) {
-  const cart = getCart().filter(i => i.id !== productId);
+export function removeFromCart(cartKeyOrId) {
+  const cart = getCart().filter(i => (i.cartKey ?? i.id) !== cartKeyOrId);
   saveCart(cart);
 }
 
-export function updateQty(productId, qty) {
+export function updateQty(cartKeyOrId, qty) {
   if (qty <= 0) {
-    removeFromCart(productId);
+    removeFromCart(cartKeyOrId);
     return;
   }
   const cart = getCart();
-  const item = cart.find(i => i.id === productId);
+  const item = cart.find(i => (i.cartKey ?? i.id) === cartKeyOrId);
   if (item) {
     item.qty = qty;
     saveCart(cart);

@@ -416,10 +416,32 @@
                   <input type="checkbox" id="pf-featured" ${p.featured ? 'checked':''}>
                   <span>Auf Startseite hervorheben (Highlight)</span>
                 </label>
-                <label class="admin-checkbox-label">
-                  <input type="checkbox" id="pf-instock" ${p.inStock ? 'checked':''}>
-                  <span>Verfügbar (Lagernd)</span>
+                <div id="instock-group">
+                  <label class="admin-checkbox-label">
+                    <input type="checkbox" id="pf-instock" ${p.inStock ? 'checked':''}>
+                    <span>Verfügbar (Lagernd)</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Lagerbestand -->
+              <div class="form-group" id="stock-group">
+                <label class="form-label" for="pf-stock">Lagerbestand</label>
+                <input class="form-input" type="number" id="pf-stock" min="0"
+                       value="${p.stock ?? ''}" placeholder="Leer = unbegrenzt" style="width:160px;">
+                <p class="admin-field-hint">Leer = kein Tracking · 0 = ausverkauft · &lt;3 = Warnung im Shop</p>
+              </div>
+
+              <!-- Größenvarianten -->
+              <div class="form-group">
+                <label class="admin-checkbox-label" style="margin-bottom:var(--space-3)">
+                  <input type="checkbox" id="pf-has-variants" ${p.variants?.length ? 'checked':''}>
+                  <span style="font-weight:var(--weight-medium)">Größenvarianten aktivieren (z.B. XS / S / M / L)</span>
                 </label>
+                <div id="variants-section" class="${p.variants?.length ? '' : 'hidden'}">
+                  <div id="variants-table" style="margin-bottom:var(--space-3)"></div>
+                  <button type="button" class="btn btn--ghost btn--sm" id="add-variant-btn">+ Größe hinzufügen</button>
+                </div>
               </div>
             </div>
 
@@ -514,6 +536,140 @@
 
       refreshImageGrid();
 
+      // ── Varianten-Verwaltung ────────────────────────────────
+      let currentVariants = [...(p.variants ?? [])];
+
+      function renderVariantsTable() {
+        const container = document.getElementById('variants-table');
+        if (!container) return;
+
+        if (currentVariants.length === 0) {
+          container.innerHTML = `<p class="admin-field-hint" style="margin:0">Noch keine Größen. Klicke "+ Größe hinzufügen".</p>`;
+          return;
+        }
+
+        container.innerHTML = `
+          <table style="width:100%;border-collapse:collapse;font-size:var(--text-sm)">
+            <thead>
+              <tr style="color:var(--color-text-light);text-transform:uppercase;letter-spacing:.06em;font-size:11px">
+                <th style="text-align:left;padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border)">Größe</th>
+                <th style="text-align:left;padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border)">Preis (€)</th>
+                <th style="text-align:left;padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border)">Bestand</th>
+                <th style="text-align:left;padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border)">Verfügbar</th>
+                <th style="border-bottom:1px solid var(--color-border)"></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${currentVariants.map((v, i) => `
+                <tr>
+                  <td style="padding:var(--space-2) var(--space-3)">
+                    <input class="form-input" type="text" data-field="size" data-index="${i}"
+                           value="${v.size}" placeholder="XS" style="width:70px">
+                  </td>
+                  <td style="padding:var(--space-2) var(--space-3)">
+                    <input class="form-input" type="number" data-field="price" data-index="${i}"
+                           value="${(v.price/100).toFixed(2)}" min="0" step="0.01" style="width:90px">
+                  </td>
+                  <td style="padding:var(--space-2) var(--space-3)">
+                    <input class="form-input" type="number" data-field="stock" data-index="${i}"
+                           value="${v.stock ?? ''}" min="0" placeholder="∞" style="width:70px">
+                  </td>
+                  <td style="padding:var(--space-2) var(--space-3)">
+                    <label class="admin-toggle" style="min-width:0">
+                      <input type="checkbox" data-field="inStock" data-index="${i}" ${v.inStock ? 'checked':''}>
+                      <span class="admin-toggle__track"></span>
+                    </label>
+                  </td>
+                  <td style="padding:var(--space-2) var(--space-3)">
+                    <button type="button" class="btn btn--ghost btn--sm variant-remove-btn"
+                            data-index="${i}" style="color:var(--color-error)">×</button>
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>`;
+
+        // Events
+        container.querySelectorAll('[data-field]').forEach(input => {
+          const ev = input.type === 'checkbox' ? 'change' : 'input';
+          input.addEventListener(ev, () => {
+            const idx   = Number(input.dataset.index);
+            const field = input.dataset.field;
+            if (field === 'price') {
+              currentVariants[idx].price = Math.round(parseFloat(input.value) * 100) || 0;
+            } else if (field === 'stock') {
+              const sv = input.value.trim();
+              currentVariants[idx].stock   = sv === '' ? null : Math.max(0, parseInt(sv, 10));
+              if (currentVariants[idx].stock !== null) {
+                currentVariants[idx].inStock = currentVariants[idx].stock > 0;
+                const cb = container.querySelector(`[data-field="inStock"][data-index="${idx}"]`);
+                if (cb) cb.checked = currentVariants[idx].inStock;
+              }
+            } else if (field === 'inStock') {
+              currentVariants[idx].inStock = input.checked;
+            } else {
+              currentVariants[idx][field] = input.value;
+            }
+          });
+        });
+
+        container.querySelectorAll('.variant-remove-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            currentVariants.splice(Number(btn.dataset.index), 1);
+            renderVariantsTable();
+          });
+        });
+      }
+
+      // Toggle Varianten ein/aus
+      document.getElementById('pf-has-variants')?.addEventListener('change', (e) => {
+        const varSection   = document.getElementById('variants-section');
+        const stockGroup   = document.getElementById('stock-group');
+        const instockGroup = document.getElementById('instock-group');
+        const priceInput   = document.getElementById('pf-price');
+
+        if (e.target.checked) {
+          varSection.classList.remove('hidden');
+          stockGroup.classList.add('hidden');
+          instockGroup.classList.add('hidden');
+          priceInput.disabled    = true;
+          priceInput.placeholder = 'Aus Varianten berechnet';
+          if (currentVariants.length === 0) {
+            const base = Math.round(parseFloat(priceInput.value || '0') * 100);
+            currentVariants = [
+              { size: 'XS', price: base, stock: null, inStock: true },
+              { size: 'S',  price: base, stock: null, inStock: true },
+              { size: 'M',  price: base, stock: null, inStock: true },
+              { size: 'L',  price: base, stock: null, inStock: true },
+            ];
+          }
+          renderVariantsTable();
+        } else {
+          varSection.classList.add('hidden');
+          stockGroup.classList.remove('hidden');
+          instockGroup.classList.remove('hidden');
+          priceInput.disabled    = false;
+          priceInput.placeholder = '39.00';
+        }
+      });
+
+      document.getElementById('add-variant-btn')?.addEventListener('click', () => {
+        currentVariants.push({ size: '', price: 0, stock: null, inStock: true });
+        renderVariantsTable();
+        setTimeout(() => {
+          const inputs = document.querySelectorAll('[data-field="size"]');
+          inputs[inputs.length - 1]?.focus();
+        }, 50);
+      });
+
+      // Initial-Render wenn Varianten schon vorhanden
+      if (p.variants?.length) {
+        document.getElementById('pf-price').disabled    = true;
+        document.getElementById('pf-price').placeholder = 'Aus Varianten berechnet';
+        document.getElementById('stock-group').classList.add('hidden');
+        document.getElementById('instock-group').classList.add('hidden');
+        renderVariantsTable();
+      }
+
       // File-Picker-Handler
       document.getElementById('file-picker').addEventListener('change', async (e) => {
         const files = Array.from(e.target.files);
@@ -557,14 +713,38 @@
           return;
         }
 
-        const category = document.getElementById('pf-category').value;
-        const cat      = categories.find(c => c.id === category);
-        const name     = document.getElementById('pf-name').value.trim();
-        const priceVal = parseFloat(document.getElementById('pf-price').value);
+        const category    = document.getElementById('pf-category').value;
+        const cat         = categories.find(c => c.id === category);
+        const name        = document.getElementById('pf-name').value.trim();
+        const hasVariants = document.getElementById('pf-has-variants').checked;
 
-        if (!name || isNaN(priceVal) || priceVal <= 0) {
-          showToast('Bitte Name und Preis ausfüllen.', 'error');
-          return;
+        if (!name) { showToast('Bitte Name ausfüllen.', 'error'); return; }
+
+        let price, stock, inStock, variants;
+
+        if (hasVariants) {
+          const valid = currentVariants.filter(v => v.size.trim());
+          if (valid.length === 0) {
+            showToast('Bitte mindestens eine Größenvariante anlegen.', 'error');
+            return;
+          }
+          price    = Math.min(...valid.map(v => v.price));
+          stock    = null;
+          inStock  = valid.some(v => v.inStock);
+          variants = valid;
+        } else {
+          const priceVal = parseFloat(document.getElementById('pf-price').value);
+          if (isNaN(priceVal) || priceVal <= 0) {
+            showToast('Bitte Preis ausfüllen.', 'error');
+            return;
+          }
+          price    = Math.round(priceVal * 100);
+          const sv = document.getElementById('pf-stock').value.trim();
+          stock    = sv === '' ? null : Math.max(0, parseInt(sv, 10));
+          inStock  = stock === null
+            ? document.getElementById('pf-instock').checked
+            : stock > 0;
+          variants = [];
         }
 
         const details = [0,1,2,3]
@@ -576,13 +756,15 @@
           name,
           category,
           categoryLabel:  cat?.label ?? category,
-          price:          Math.round(priceVal * 100),
-          priceFormatted: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(priceVal),
+          price,
+          priceFormatted: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(price / 100),
+          stock,
+          inStock,
+          variants,
           description:    document.getElementById('pf-desc').value.trim(),
           details,
           badge:          document.getElementById('pf-badge').value || null,
           images:         currentImages.filter(img => img !== '__uploading__'),
-          inStock:        document.getElementById('pf-instock').checked,
           featured:       document.getElementById('pf-featured').checked,
         };
 
