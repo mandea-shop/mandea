@@ -8,6 +8,11 @@ node_modules/
 # Netlify Build-Output
 .netlify/
 
+# Produktdaten — werden ausschließlich via Admin-Interface verwaltet
+# Nie lokal committen! Änderungen nur via Admin → GitHub API
+public/products.json
+public/categories.json
+
 # macOS
 .DS_Store
 

@@ -7,7 +7,7 @@
 
 const HEADERS = {
   'Content-Type':                'application/json',
-  'Cache-Control':               'public, max-age=30, stale-while-revalidate=60',
+  'Cache-Control':               'no-store',
   'Access-Control-Allow-Origin': '*',
 };
 
