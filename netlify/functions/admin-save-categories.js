@@ -105,9 +105,9 @@ export const handler = async (event) => {
       githubToken
     );
     currentSha = current.sha;
-  } catch (err) {
-    console.error('Fehler beim Lesen der aktuellen categories.json:', err.message);
-    return { statusCode: 502, headers: HEADERS, body: JSON.stringify({ message: 'Aktuelle Datei konnte nicht gelesen werden.' }) };
+  } catch {
+    // Datei existiert noch nicht — wird neu angelegt (kein SHA nötig)
+    currentSha = undefined;
   }
 
   const newContent = JSON.stringify({ categories }, null, 2);

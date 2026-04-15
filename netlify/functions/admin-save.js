@@ -125,9 +125,9 @@ export const handler = async (event) => {
       githubToken
     );
     currentSha = current.sha;
-  } catch (err) {
-    console.error('Fehler beim Lesen der aktuellen products.json:', err.message);
-    return { statusCode: 502, headers: HEADERS, body: JSON.stringify({ message: 'Aktuelle Datei konnte nicht gelesen werden.' }) };
+  } catch {
+    // Datei existiert noch nicht — wird neu angelegt (kein SHA nötig)
+    currentSha = undefined;
   }
 
   // ── Neue products.json als Base64 kodieren ────────────────
