@@ -63,12 +63,9 @@
 
         <!-- Filter-Leiste -->
         <div class="shop-toolbar" role="toolbar" aria-label="Filter und Sortierung">
-          <div class="filter-tabs" role="group" aria-label="Kategorien filtern">
+          <div class="filter-tabs" role="group" aria-label="Kategorien filtern" id="filter-tabs">
             <button class="filter-tab active" data-category="alle">Alle</button>
-            <button class="filter-tab" data-category="ohrringe">Ohrringe</button>
-            <button class="filter-tab" data-category="armbänder">Armbänder</button>
-            <button class="filter-tab" data-category="ketten">Ketten</button>
-            <button class="filter-tab" data-category="ringe">Ringe</button>
+            <!-- weitere Tabs werden per JS aus categories.json geladen -->
           </div>
 
           <div class="shop-toolbar__right">
@@ -159,6 +156,39 @@
     const params = new URLSearchParams(window.location.search);
     const urlCategory = params.get('kategorie');
 
+    // ── Kategorien aus JSON laden und Tabs bauen ──────────────
+    async function loadFilterTabs() {
+      try {
+        const res  = await fetch('/categories.json');
+        const data = await res.json();
+        const tabs = document.getElementById('filter-tabs');
+        data.categories.forEach(cat => {
+          const btn = document.createElement('button');
+          btn.className       = 'filter-tab';
+          btn.dataset.category = cat.id;
+          btn.textContent     = cat.label;
+          tabs.appendChild(btn);
+        });
+        // Event-Listener auf alle (inkl. "Alle")
+        tabs.querySelectorAll('.filter-tab').forEach(tab => {
+          tab.addEventListener('click', () => {
+            activeCategory = tab.dataset.category;
+            tabs.querySelectorAll('.filter-tab').forEach(t => {
+              t.classList.toggle('active', t === tab);
+              t.setAttribute('aria-pressed', t === tab ? 'true' : 'false');
+            });
+            render();
+            const url = new URL(window.location);
+            if (activeCategory === 'alle') url.searchParams.delete('kategorie');
+            else url.searchParams.set('kategorie', activeCategory);
+            history.replaceState(null, '', url);
+          });
+        });
+      } catch {
+        // Fallback: statische Tabs bleiben erhalten
+      }
+    }
+
     // ── Produkte rendern ──────────────────────────────────────
     function getFiltered() {
       let list = activeCategory === 'alle'
@@ -228,21 +258,16 @@
       });
     }
 
-    // ── Filter-Tabs ───────────────────────────────────────────
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        activeCategory = tab.dataset.category;
-        document.querySelectorAll('.filter-tab').forEach(t => {
-          t.classList.toggle('active', t === tab);
-          t.setAttribute('aria-pressed', t === tab ? 'true' : 'false');
-        });
-        render();
-        // URL aktualisieren ohne Seitenreload
-        const url = new URL(window.location);
-        if (activeCategory === 'alle') url.searchParams.delete('kategorie');
-        else url.searchParams.set('kategorie', activeCategory);
-        history.replaceState(null, '', url);
+    // ── "Alle"-Tab bekommt sofort seinen Listener ────────────
+    document.querySelector('.filter-tab[data-category="alle"]').addEventListener('click', () => {
+      activeCategory = 'alle';
+      document.querySelectorAll('.filter-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.category === 'alle');
       });
+      render();
+      const url = new URL(window.location);
+      url.searchParams.delete('kategorie');
+      history.replaceState(null, '', url);
     });
 
     // ── Sortierung ────────────────────────────────────────────
@@ -262,14 +287,16 @@
 
     // ── Initialisierung ───────────────────────────────────────
     async function init() {
+      // Kategorien und Produkte parallel laden
+      await loadFilterTabs();
+
       try {
         allProducts = await loadProducts();
 
-        // URL-Parameter anwenden
+        // URL-Parameter anwenden (nach Tab-Aufbau)
         if (urlCategory) {
-          const normalised = urlCategory.toLowerCase();
-          const matchingTab = [...document.querySelectorAll('.filter-tab')]
-            .find(t => t.dataset.category === normalised);
+          const normalised  = urlCategory.toLowerCase();
+          const matchingTab = document.querySelector(`.filter-tab[data-category="${normalised}"]`);
           if (matchingTab) {
             activeCategory = normalised;
             document.querySelectorAll('.filter-tab').forEach(t =>
