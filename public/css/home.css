@@ -215,6 +215,18 @@
 }
 
 
+/* ── FEATURED PRODUCTS GRID (4 Spalten wie Kategorien) ──── */
+
+#featured-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 900px) {
+  #featured-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* ── FEATURED FOOTER ─────────────────────────────────────── */
 
 .featured__footer {
