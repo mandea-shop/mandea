@@ -57,12 +57,12 @@
         "Verschluss: Stecker mit Sicherheitsmutter",
         "Kleinserie, handgefertigt"
       ],
-      "badge": "Neu",
+      "badge": "Bestseller",
       "images": [
         "https://cdn.jsdelivr.net/gh/mandea-shop/mandea@main/public/images/products/screenshot_20260328_074451_gallery.jpg"
       ],
       "inStock": true,
-      "featured": false
+      "featured": true
     },
     {
       "id": "arm-001",
