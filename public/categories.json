@@ -5,7 +5,7 @@
       "label": "Ohrringe",
       "idPrefix": "ohr",
       "image": "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/screenshot_20260328_074447_gallery.jpg",
-      "description": "auch Sets"
+      "description": "auch im Set erhältlich"
     },
     {
       "id": "armbänder",
@@ -16,17 +16,20 @@
     {
       "id": "ketten",
       "label": "Ketten",
-      "idPrefix": "ket"
+      "idPrefix": "ket",
+      "image": "https://cdn.jsdelivr.net/gh/mandea-shop/mandea@main/public/images/products/screenshot_20260328_074434_gallery.webp"
     },
     {
       "id": "ringe",
       "label": "Ringe",
-      "idPrefix": "ring"
+      "idPrefix": "ring",
+      "image": "https://cdn.jsdelivr.net/gh/mandea-shop/mandea@main/public/images/products/screenshot_20260323_094822_gallery.webp"
     },
     {
       "id": "kinderschmuck",
       "label": "Kinderschmuck",
-      "idPrefix": "kind"
+      "idPrefix": "kind",
+      "image": "https://cdn.jsdelivr.net/gh/mandea-shop/mandea@main/public/images/products/screenshot_20260328_074447_gallery.webp"
     }
   ]
 }
