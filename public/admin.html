@@ -61,6 +61,10 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
             Neues Produkt
           </button>
+          <button class="admin-nav__item" data-tab="categories">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/><rect x="3" y="5" width="4" height="4" rx="1"/><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="3" y="15" width="4" height="4" rx="1"/></svg>
+            Kategorien
+          </button>
         </nav>
 
         <div class="admin-sidebar__save">
@@ -85,10 +89,6 @@
             <div class="admin-section-header__filters">
               <select class="form-select admin-filter-select" id="filter-category">
                 <option value="alle">Alle Kategorien</option>
-                <option value="ohrringe">Ohrringe</option>
-                <option value="armbänder">Armbänder</option>
-                <option value="ketten">Ketten</option>
-                <option value="ringe">Ringe</option>
               </select>
             </div>
           </div>
@@ -98,7 +98,7 @@
           </div>
         </div>
 
-        <!-- Tab: Neues Produkt -->
+        <!-- Tab: Neues Produkt / Bearbeiten -->
         <div class="admin-tab" id="tab-add">
           <div class="admin-section-header">
             <div>
@@ -108,6 +108,58 @@
           </div>
           <div id="product-form-wrap">
             <!-- Formular wird per JS gerendert -->
+          </div>
+        </div>
+
+        <!-- Tab: Kategorien -->
+        <div class="admin-tab" id="tab-categories">
+          <div class="admin-section-header">
+            <div>
+              <h1>Kategorien</h1>
+              <p>Verwalte deine Produktkategorien. Änderungen wirken sich auf den Shop und das Produktformular aus.</p>
+            </div>
+          </div>
+
+          <div class="admin-categories-wrap">
+            <div class="admin-form-section">
+              <h3 class="admin-form-section-title">Aktuelle Kategorien</h3>
+              <div id="categories-list">
+                <!-- per JS befüllt -->
+              </div>
+            </div>
+
+            <div class="admin-form-section">
+              <h3 class="admin-form-section-title">Neue Kategorie hinzufügen</h3>
+              <div class="admin-cat-add-form">
+                <div class="form-group">
+                  <label class="form-label" for="new-cat-label">Anzeigename *</label>
+                  <input class="form-input" type="text" id="new-cat-label"
+                         placeholder="z.B. Kinderschmuck">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="new-cat-id">ID (URL-Slug) *</label>
+                    <input class="form-input" type="text" id="new-cat-id"
+                           placeholder="z.B. kinderschmuck">
+                    <p class="admin-field-hint">Nur Kleinbuchstaben, Ziffern, Bindestrich</p>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="new-cat-prefix">Produkt-Prefix *</label>
+                    <input class="form-input" type="text" id="new-cat-prefix"
+                           placeholder="z.B. kind">
+                    <p class="admin-field-hint">Kurz, für Produkt-IDs</p>
+                  </div>
+                </div>
+                <button class="btn btn--secondary" id="add-cat-btn">+ Kategorie hinzufügen</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-form-footer">
+            <button class="btn btn--primary btn--lg" id="save-cats-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Kategorien speichern
+            </button>
           </div>
         </div>
 
@@ -135,10 +187,11 @@
 
   <script type="module">
     // ── Zustand ───────────────────────────────────────────────
-    let products = [];
-    let dirty    = false;    // ungespeicherte Änderungen?
-    let editId   = null;     // ID des gerade bearbeiteten Produkts
-    let token    = sessionStorage.getItem('mandea_admin_token') ?? null;
+    let products   = [];
+    let categories = [];
+    let dirty      = false;
+    let editId     = null;
+    let token      = sessionStorage.getItem('mandea_admin_token') ?? null;
 
     // ── DOM-Refs ──────────────────────────────────────────────
     const loginScreen = document.getElementById('login-screen');
@@ -158,7 +211,10 @@
       t.className = `toast ${type}`;
       t.textContent = msg;
       c.appendChild(t);
-      setTimeout(() => { t.classList.add('hiding'); t.addEventListener('animationend', () => t.remove(), { once: true }); }, 3500);
+      setTimeout(() => {
+        t.classList.add('hiding');
+        t.addEventListener('animationend', () => t.remove(), { once: true });
+      }, 3500);
     }
 
     function markDirty() {
@@ -176,28 +232,46 @@
     }
 
     function generateId(name, category) {
-      const prefix = { ohrringe: 'ohr', 'armbänder': 'arm', ketten: 'ket', ringe: 'ring' }[category] ?? 'prod';
-      const slug   = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').substring(0, 12);
+      const cat    = categories.find(c => c.id === category);
+      const prefix = cat?.idPrefix ?? 'prod';
       const num    = String(products.filter(p => p.category === category).length + 1).padStart(3, '0');
       return `${prefix}-${num}`;
     }
 
-    // ── Tab-Navigation ────────────────────────────────────────
+    // ── Tab-Navigation (ohne Event-Handler-Auslösung) ─────────
+    function switchToTab(tabName) {
+      document.querySelectorAll('.admin-nav__item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      const navBtn = document.querySelector(`[data-tab="${tabName}"]`);
+      if (navBtn) navBtn.classList.add('active');
+      const tab = document.getElementById(`tab-${tabName}`);
+      if (tab) tab.classList.add('active');
+    }
+
+    // Tab-Click-Handler (nur für Klicks durch den User)
     document.querySelectorAll('.admin-nav__item').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.admin-nav__item').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
-
+        switchToTab(btn.dataset.tab);
+        // Nur beim manuellen Klick auf "Neues Produkt" → Formular zurücksetzen
         if (btn.dataset.tab === 'add') {
           editId = null;
-          document.getElementById('form-title').textContent = 'Neues Produkt';
+          document.getElementById('form-title').textContent    = 'Neues Produkt';
           document.getElementById('form-subtitle').textContent = 'Füll alle Pflichtfelder aus und klicke „Speichern".';
           renderForm(null);
         }
       });
     });
+
+    // ── Kategorie-Select dynamisch befüllen ───────────────────
+    function renderFilterSelect() {
+      const sel     = document.getElementById('filter-category');
+      const current = sel.value;
+      sel.innerHTML = '<option value="alle">Alle Kategorien</option>' +
+        categories.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
+      if (current && sel.querySelector(`option[value="${current}"]`)) {
+        sel.value = current;
+      }
+    }
 
     // ── Produkt-Liste rendern ─────────────────────────────────
     function renderList() {
@@ -224,7 +298,7 @@
           </div>
 
           <div class="admin-product-row__info">
-            <span class="admin-product-row__cat">${p.categoryLabel}</span>
+            <span class="admin-product-row__cat">${p.categoryLabel ?? p.category}</span>
             <strong class="admin-product-row__name">${p.name}</strong>
             <span class="admin-product-row__id">${p.id}</span>
           </div>
@@ -234,9 +308,9 @@
           </div>
 
           <div class="admin-product-row__badges">
-            ${p.badge ? `<span class="admin-badge admin-badge--gold">${p.badge}</span>` : ''}
-            ${p.featured ? `<span class="admin-badge admin-badge--blue">Highlight</span>` : ''}
-            ${!p.inStock ? `<span class="admin-badge admin-badge--red">Ausverkauft</span>` : ''}
+            ${p.badge    ? `<span class="admin-badge admin-badge--gold">${p.badge}</span>`   : ''}
+            ${p.featured ? `<span class="admin-badge admin-badge--blue">Highlight</span>`    : ''}
+            ${!p.inStock ? `<span class="admin-badge admin-badge--red">Ausverkauft</span>`   : ''}
           </div>
 
           <div class="admin-product-row__actions">
@@ -246,19 +320,13 @@
               <span class="admin-toggle__track"></span>
               <span class="admin-toggle__label">${p.inStock ? 'Verfügbar' : 'Ausverkauft'}</span>
             </label>
-
-            <button class="btn btn--secondary btn--sm edit-btn" data-id="${p.id}">
-              Bearbeiten
-            </button>
+            <button class="btn btn--secondary btn--sm edit-btn" data-id="${p.id}">Bearbeiten</button>
             <button class="btn btn--ghost btn--sm delete-btn" data-id="${p.id}"
-                    style="color: var(--color-error);">
-              Löschen
-            </button>
+                    style="color: var(--color-error);">Löschen</button>
           </div>
         </div>
       `).join('');
 
-      // Events
       el.querySelectorAll('.stock-toggle').forEach(cb => {
         cb.addEventListener('change', () => {
           const p = products.find(x => x.id === cb.dataset.id);
@@ -280,10 +348,15 @@
     // ── Produkt-Formular ──────────────────────────────────────
     function renderForm(product) {
       const p = product ?? {
-        id: '', name: '', category: 'ohrringe', categoryLabel: 'Ohrringe',
+        id: '', name: '', category: categories[0]?.id ?? 'ohrringe',
+        categoryLabel: categories[0]?.label ?? 'Ohrringe',
         price: '', description: '', details: ['', '', '', ''],
         badge: '', images: [], inStock: true, featured: false,
       };
+
+      const categoryOptions = categories.map(c =>
+        `<option value="${c.id}" ${c.id === p.category ? 'selected' : ''}>${c.label}</option>`
+      ).join('');
 
       document.getElementById('product-form-wrap').innerHTML = `
         <form class="admin-product-form" id="product-form" novalidate>
@@ -303,10 +376,7 @@
                 <div class="form-group">
                   <label class="form-label" for="pf-category">Kategorie *</label>
                   <select class="form-select" id="pf-category" required>
-                    <option value="ohrringe"   ${p.category==='ohrringe'   ? 'selected':''}>Ohrringe</option>
-                    <option value="armbänder"  ${p.category==='armbänder'  ? 'selected':''}>Armbänder</option>
-                    <option value="ketten"     ${p.category==='ketten'     ? 'selected':''}>Ketten</option>
-                    <option value="ringe"      ${p.category==='ringe'      ? 'selected':''}>Ringe</option>
+                    ${categoryOptions}
                   </select>
                 </div>
                 <div class="form-group">
@@ -362,28 +432,19 @@
               <div class="form-group">
                 <label class="form-label">Produktfotos</label>
                 <div class="admin-image-section">
-                  <div class="admin-image-grid" id="image-grid">
-                    ${(p.images ?? []).map((img, i) => `
-                      <div class="admin-image-item" data-index="${i}">
-                        <img src="${img}" alt="Foto ${i+1}">
-                        <button type="button" class="admin-image-remove" data-index="${i}" aria-label="Foto entfernen">×</button>
-                      </div>
-                    `).join('')}
-                    <div class="admin-image-placeholder" id="add-image-btn">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                      <span>Foto hinzufügen</span>
-                    </div>
-                  </div>
 
-                  <div class="admin-image-url-add hidden" id="image-url-input">
-                    <input class="form-input" type="text" id="image-url" placeholder="/images/products/mein-foto.jpg">
-                    <button type="button" class="btn btn--secondary btn--sm" id="image-url-confirm">Hinzufügen</button>
-                    <button type="button" class="btn btn--ghost btn--sm" id="image-url-cancel">Abbrechen</button>
+                  <!-- Verstecktes File-Input -->
+                  <input type="file" id="file-picker"
+                         accept="image/jpeg,image/png,image/webp"
+                         style="display:none">
+
+                  <div class="admin-image-grid" id="image-grid">
+                    <!-- per JS befüllt -->
                   </div>
 
                   <p class="admin-image-hint">
-                    Fotos zuerst in <code>/public/images/products/</code> ablegen, dann hier den Pfad eingeben.<br>
-                    Empfehlung: WebP-Format, max. 800 KB, Seitenverhältnis 3:4.
+                    Erlaubt: JPG, PNG, WebP · Max. 5 MB pro Bild<br>
+                    Empfehlung: Seitenverhältnis 3:4, min. 800 × 1000 px
                   </p>
                 </div>
               </div>
@@ -401,20 +462,29 @@
         </form>
       `;
 
-      // Bild-Events
-      let currentImages = [...(p.images ?? [])];
+      // ── Bild-Verwaltung ─────────────────────────────────────
+      let currentImages  = [...(p.images ?? [])];
+      let uploadingCount = 0;
 
       function refreshImageGrid() {
         const grid = document.getElementById('image-grid');
-        grid.innerHTML = currentImages.map((img, i) => `
-          <div class="admin-image-item" data-index="${i}">
-            <img src="${img}" alt="Foto ${i+1}">
-            <button type="button" class="admin-image-remove" data-index="${i}" aria-label="Foto entfernen">×</button>
-          </div>
-        `).join('') + `
-          <div class="admin-image-placeholder" id="add-image-btn">
+        if (!grid) return;
+
+        grid.innerHTML = currentImages.map((img, i) => {
+          const isUploading = img === '__uploading__';
+          return `
+            <div class="admin-image-item${isUploading ? ' admin-image-item--loading' : ''}" data-index="${i}">
+              ${isUploading
+                ? `<div class="admin-image-spinner"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>`
+                : `<img src="${img}" alt="Foto ${i+1}" loading="lazy">
+                   <button type="button" class="admin-image-remove" data-index="${i}" aria-label="Foto entfernen">×</button>`
+              }
+            </div>`;
+        }).join('') + `
+          <div class="admin-image-placeholder" id="add-image-btn"
+               ${uploadingCount > 0 ? 'style="pointer-events:none;opacity:0.5"' : ''}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>Foto hinzufügen</span>
+            <span>${uploadingCount > 0 ? 'Wird hochgeladen…' : 'Foto hinzufügen'}</span>
           </div>`;
 
         grid.querySelectorAll('.admin-image-remove').forEach(btn => {
@@ -424,30 +494,63 @@
           });
         });
 
-        document.getElementById('add-image-btn').addEventListener('click', () => {
-          document.getElementById('image-url-input').classList.remove('hidden');
+        document.getElementById('add-image-btn')?.addEventListener('click', () => {
+          if (uploadingCount === 0) {
+            document.getElementById('file-picker').click();
+          }
         });
+
+        // Submit-Button sperren während Upload
+        const submitBtn = document.getElementById('form-save-btn');
+        if (submitBtn) submitBtn.disabled = uploadingCount > 0;
       }
 
       refreshImageGrid();
 
-      document.getElementById('image-url-confirm').addEventListener('click', () => {
-        const val = document.getElementById('image-url').value.trim();
-        if (val) { currentImages.push(val); refreshImageGrid(); }
-        document.getElementById('image-url-input').classList.add('hidden');
-        document.getElementById('image-url').value = '';
-      });
+      // File-Picker-Handler
+      document.getElementById('file-picker').addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        e.target.value = ''; // sofort zurücksetzen für wiederholte Auswahl
 
-      document.getElementById('image-url-cancel').addEventListener('click', () => {
-        document.getElementById('image-url-input').classList.add('hidden');
+        for (const file of files) {
+          const uploadIdx = currentImages.length;
+          currentImages.push('__uploading__');
+          uploadingCount++;
+          refreshImageGrid();
+
+          try {
+            const base64 = await fileToBase64(file);
+            const res    = await fetch('/.netlify/functions/admin-upload', {
+              method:  'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body:    JSON.stringify({ token, filename: file.name, contentBase64: base64 }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message ?? `Fehler ${res.status}`);
+
+            currentImages[uploadIdx] = data.path;
+            showToast(`„${file.name}" hochgeladen.`, 'success');
+          } catch (err) {
+            currentImages.splice(uploadIdx, 1);
+            showToast(`Upload fehlgeschlagen: ${err.message}`, 'error');
+          }
+
+          uploadingCount--;
+          refreshImageGrid();
+        }
       });
 
       // Formular absenden
       document.getElementById('product-form').addEventListener('submit', e => {
         e.preventDefault();
 
-        const catMap = { ohrringe: 'Ohrringe', 'armbänder': 'Armbänder', ketten: 'Ketten', ringe: 'Ringe' };
+        if (uploadingCount > 0) {
+          showToast('Bitte warte, bis alle Fotos hochgeladen sind.', 'error');
+          return;
+        }
+
         const category = document.getElementById('pf-category').value;
+        const cat      = categories.find(c => c.id === category);
         const name     = document.getElementById('pf-name').value.trim();
         const priceVal = parseFloat(document.getElementById('pf-price').value);
 
@@ -461,18 +564,18 @@
           .filter(Boolean);
 
         const updated = {
-          id:            editId ?? generateId(name, category),
+          id:             editId ?? generateId(name, category),
           name,
           category,
-          categoryLabel: catMap[category],
-          price:         Math.round(priceVal * 100),
-          priceFormatted: new Intl.NumberFormat('de-DE', {style:'currency',currency:'EUR'}).format(priceVal),
-          description:   document.getElementById('pf-desc').value.trim(),
+          categoryLabel:  cat?.label ?? category,
+          price:          Math.round(priceVal * 100),
+          priceFormatted: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(priceVal),
+          description:    document.getElementById('pf-desc').value.trim(),
           details,
-          badge:         document.getElementById('pf-badge').value || null,
-          images:        currentImages,
-          inStock:       document.getElementById('pf-instock').checked,
-          featured:      document.getElementById('pf-featured').checked,
+          badge:          document.getElementById('pf-badge').value || null,
+          images:         currentImages.filter(img => img !== '__uploading__'),
+          inStock:        document.getElementById('pf-instock').checked,
+          featured:       document.getElementById('pf-featured').checked,
         };
 
         if (editId) {
@@ -486,24 +589,27 @@
 
         markDirty();
         editId = null;
-
-        // Zurück zur Liste
-        document.querySelector('[data-tab="products"]').click();
+        switchToTab('products');
+        renderList();
       });
 
       document.getElementById('form-cancel-btn').addEventListener('click', () => {
-        document.querySelector('[data-tab="products"]').click();
+        editId = null;
+        switchToTab('products');
       });
     }
 
     // ── Bearbeiten öffnen ─────────────────────────────────────
+    // FIX: switchToTab() statt .click() — verhindert den Reset des Formulars
     function openEdit(id) {
-      editId = id;
       const p = products.find(x => x.id === id);
-      document.getElementById('form-title').textContent = `Bearbeiten: ${p.name}`;
+      if (!p) return;
+
+      editId = id;
+      document.getElementById('form-title').textContent    = `Bearbeiten: ${p.name}`;
       document.getElementById('form-subtitle').textContent = 'Änderungen werden erst nach „Speichern" veröffentlicht.';
-      renderForm(p);
-      document.querySelector('[data-tab="add"]').click();
+      renderForm(p);          // erst Formular mit Daten füllen …
+      switchToTab('add');     // … dann Tab wechseln (ohne Reset-Event!)
     }
 
     // ── Löschen ───────────────────────────────────────────────
@@ -532,23 +638,19 @@
       showToast(`„${p.name}" wurde gelöscht.`, 'info');
     });
 
-    // ── Speichern via Netlify Function ────────────────────────
+    // ── Produkte via Netlify Function speichern ───────────────
     saveBtn.addEventListener('click', async () => {
-      saveBtn.disabled = true;
+      saveBtn.disabled    = true;
       saveBtn.textContent = 'Wird gespeichert…';
 
       try {
-        const res = await fetch('/.netlify/functions/admin-save', {
+        const res  = await fetch('/.netlify/functions/admin-save', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({ token, products }),
         });
-
         const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.message ?? `Fehler ${res.status}`);
-        }
+        if (!res.ok) throw new Error(data.message ?? `Fehler ${res.status}`);
 
         markClean();
         showToast('Gespeichert! Die Website wird in ~30 Sekunden aktualisiert.', 'success');
@@ -556,8 +658,119 @@
 
       } catch (err) {
         showToast(`Speichern fehlgeschlagen: ${err.message}`, 'error');
-        saveBtn.disabled = false;
+        saveBtn.disabled  = false;
         saveBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Änderungen speichern`;
+      }
+    });
+
+    // ── Kategorien-Tab ────────────────────────────────────────
+    function renderCategoriesList() {
+      const el = document.getElementById('categories-list');
+      if (!el) return;
+
+      if (categories.length === 0) {
+        el.innerHTML = `<p style="color: var(--color-text-light); font-size: var(--text-sm);">Noch keine Kategorien angelegt.</p>`;
+        return;
+      }
+
+      el.innerHTML = categories.map((c, i) => `
+        <div class="admin-cat-row" data-id="${c.id}">
+          <div class="admin-cat-row__info">
+            <strong>${c.label}</strong>
+            <span class="admin-cat-row__meta">ID: <code>${c.id}</code> · Prefix: <code>${c.idPrefix}</code></span>
+          </div>
+          <div class="admin-cat-row__count">
+            ${products.filter(p => p.category === c.id).length} Produkte
+          </div>
+          <button class="btn btn--ghost btn--sm admin-cat-remove"
+                  data-index="${i}"
+                  ${products.some(p => p.category === c.id)
+                    ? 'disabled title="Kategorie enthält noch Produkte"'
+                    : 'style="color: var(--color-error);"'}>
+            Entfernen
+          </button>
+        </div>
+      `).join('');
+
+      el.querySelectorAll('.admin-cat-remove:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.dataset.index);
+          categories.splice(idx, 1);
+          renderCategoriesList();
+          renderFilterSelect();
+        });
+      });
+    }
+
+    // Auto-ID aus Label generieren
+    document.getElementById('new-cat-label')?.addEventListener('input', (e) => {
+      const idInput = document.getElementById('new-cat-id');
+      // Nur vorausfüllen wenn ID noch leer oder automatisch generiert
+      const currentId = idInput.value;
+      const generated = e.target.value
+        .toLowerCase()
+        .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      if (!currentId || idInput.dataset.auto === 'true') {
+        idInput.value         = generated;
+        idInput.dataset.auto  = 'true';
+      }
+    });
+
+    document.getElementById('new-cat-id')?.addEventListener('input', (e) => {
+      e.target.dataset.auto = 'false';
+    });
+
+    document.getElementById('add-cat-btn')?.addEventListener('click', () => {
+      const label  = document.getElementById('new-cat-label').value.trim();
+      const id     = document.getElementById('new-cat-id').value.trim().toLowerCase();
+      const prefix = document.getElementById('new-cat-prefix').value.trim().toLowerCase();
+
+      if (!label || !id || !prefix) {
+        showToast('Bitte alle Felder ausfüllen.', 'error');
+        return;
+      }
+      if (!/^[a-zäöüß][a-zäöüß0-9-]*$/.test(id)) {
+        showToast('ID: nur Kleinbuchstaben, Ziffern und Bindestrich erlaubt.', 'error');
+        return;
+      }
+      if (categories.some(c => c.id === id)) {
+        showToast(`Kategorie-ID „${id}" existiert bereits.`, 'error');
+        return;
+      }
+
+      categories.push({ id, label, idPrefix: prefix });
+      document.getElementById('new-cat-label').value     = '';
+      document.getElementById('new-cat-id').value        = '';
+      document.getElementById('new-cat-prefix').value    = '';
+      document.getElementById('new-cat-id').dataset.auto = 'false';
+
+      renderCategoriesList();
+      renderFilterSelect();
+      showToast(`Kategorie „${label}" hinzugefügt. Vergiss nicht zu speichern!`, 'info');
+    });
+
+    document.getElementById('save-cats-btn')?.addEventListener('click', async () => {
+      const btn = document.getElementById('save-cats-btn');
+      btn.disabled    = true;
+      btn.textContent = 'Wird gespeichert…';
+
+      try {
+        const res  = await fetch('/.netlify/functions/admin-save-categories', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ token, categories }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message ?? `Fehler ${res.status}`);
+
+        showToast(`${categories.length} Kategorien gespeichert! Website wird gleich aktualisiert.`, 'success');
+
+      } catch (err) {
+        showToast(`Speichern fehlgeschlagen: ${err.message}`, 'error');
+      } finally {
+        btn.disabled  = false;
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Kategorien speichern`;
       }
     });
 
@@ -568,7 +781,7 @@
       const pwd = document.getElementById('password-input').value;
       const err = document.getElementById('login-error');
 
-      btn.disabled = true;
+      btn.disabled    = true;
       btn.textContent = 'Prüfe…';
       err.classList.add('hidden');
 
@@ -579,18 +792,17 @@
           body:    JSON.stringify({ password: pwd }),
         });
         const data = await res.json();
-
         if (!res.ok) throw new Error(data.message);
 
         token = data.token;
         sessionStorage.setItem('mandea_admin_token', token);
         loginScreen.classList.add('hidden');
         adminApp.classList.remove('hidden');
-        await loadProducts();
+        await loadAll();
 
       } catch {
         err.classList.remove('hidden');
-        btn.disabled = false;
+        btn.disabled    = false;
         btn.textContent = 'Anmelden';
         document.getElementById('password-input').value = '';
         document.getElementById('password-input').focus();
@@ -604,24 +816,49 @@
       loginScreen.classList.remove('hidden');
     });
 
-    // ── Produkte laden ────────────────────────────────────────
+    // ── Daten laden ───────────────────────────────────────────
+    async function loadAll() {
+      await Promise.all([loadCategories(), loadProducts()]);
+    }
+
+    async function loadCategories() {
+      try {
+        const res  = await fetch('/categories.json');
+        const data = await res.json();
+        categories = data.categories ?? [];
+        renderFilterSelect();
+        renderCategoriesList();
+      } catch {
+        showToast('Kategorien konnten nicht geladen werden.', 'error');
+      }
+    }
+
     async function loadProducts() {
       try {
         const res  = await fetch('/products.json');
         const data = await res.json();
-        products = data.products;
+        products   = data.products ?? [];
         renderList();
         renderForm(null);
-      } catch (err) {
+      } catch {
         showToast('Produkte konnten nicht geladen werden.', 'error');
       }
     }
 
+    // ── Hilfs: Datei → Base64 ─────────────────────────────────
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = (e) => resolve(e.target.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
     // ── Auto-Login falls Token in Session ────────────────────
     async function init() {
-      if (!token) return; // bleibt auf Login
+      if (!token) return;
 
-      // Token kurz prüfen
       try {
         const res = await fetch('/.netlify/functions/admin-auth', {
           method:  'POST',
@@ -631,13 +868,13 @@
         if (res.ok) {
           loginScreen.classList.add('hidden');
           adminApp.classList.remove('hidden');
-          await loadProducts();
+          await loadAll();
         } else {
           sessionStorage.removeItem('mandea_admin_token');
           token = null;
         }
       } catch {
-        // offline oder Function nicht verfügbar — Login zeigen
+        // offline — Login zeigen
       }
     }
 

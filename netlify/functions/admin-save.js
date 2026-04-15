@@ -46,15 +46,14 @@ function validateProducts(products) {
   if (!Array.isArray(products)) return 'products muss ein Array sein.';
   if (products.length === 0)    return 'Produktliste ist leer.';
 
-  const VALID_CATS = new Set(['ohrringe', 'armbänder', 'ketten', 'ringe']);
-  const ids        = new Set();
+  const ids = new Set();
 
   for (const p of products) {
     if (!p.id || typeof p.id !== 'string')             return `Ungültige ID: ${JSON.stringify(p.id)}`;
     if (ids.has(p.id))                                  return `Doppelte ID: ${p.id}`;
     ids.add(p.id);
     if (!p.name || typeof p.name !== 'string')          return `Name fehlt bei: ${p.id}`;
-    if (!VALID_CATS.has(p.category))                    return `Ungültige Kategorie bei: ${p.id}`;
+    if (!p.category || typeof p.category !== 'string') return `Kategorie fehlt bei: ${p.id}`;
     if (typeof p.price !== 'number' || p.price <= 0)    return `Ungültiger Preis bei: ${p.id}`;
     if (typeof p.inStock !== 'boolean')                 return `inStock fehlt bei: ${p.id}`;
   }
