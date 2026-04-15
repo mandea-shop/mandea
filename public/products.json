@@ -27,7 +27,7 @@
       "category": "ohrringe",
       "categoryLabel": "Ohrringe",
       "price": 4500,
-      "priceFormatted": "45,00 €",
+      "priceFormatted": "45,00 €",
       "description": "Großzügige Creolen mit eingearbeitetem Mondstein-Cabochon in zartem Lavendel. Die weiche Steinfarbe harmoniert wunderschön mit wärmerem Goldfarbton.",
       "details": [
         "Material: Metallegierung, goldbeschichtet, synthetischer Mondstein",
@@ -36,7 +36,9 @@
         "Handgefertigt"
       ],
       "badge": null,
-      "images": [],
+      "images": [
+        "/images/products/kopie-von-img_20260329_223351_453.jpg"
+      ],
       "inStock": true,
       "featured": true
     },
