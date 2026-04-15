@@ -75,25 +75,25 @@
       "inStock": true,
       "variants": [
         {
-          "size": "S",
+          "size": "16,5 cm",
           "price": 1500,
           "stock": null,
           "inStock": true
         },
         {
-          "size": "M",
+          "size": "17 cm",
           "price": 1500,
           "stock": null,
           "inStock": true
         },
         {
-          "size": "L",
+          "size": "18 cm",
           "price": 1600,
           "stock": null,
           "inStock": true
         },
         {
-          "size": "XL",
+          "size": "19 cm",
           "price": 1600,
           "stock": null,
           "inStock": true
