@@ -19,11 +19,6 @@
       "id": "ringe",
       "label": "Ringe",
       "idPrefix": "ring"
-    },
-    {
-      "id": "kinderschmuck",
-      "label": "Kinderschmuck",
-      "idPrefix": "kind"
     }
   ]
 }
