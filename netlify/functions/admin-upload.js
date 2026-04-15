@@ -127,8 +127,8 @@ export const handler = async (event) => {
       githubToken
     );
 
-    // GitHub Raw-CDN: sofort verfügbar, kein Netlify-Deploy nötig
-    const rawUrl = `https://raw.githubusercontent.com/${githubOwner}/${githubRepo}/${githubBranch}/public/images/products/${safeFilename}`;
+    // jsDelivr CDN: globale Edge-Server, schneller als raw.githubusercontent.com
+    const rawUrl = `https://cdn.jsdelivr.net/gh/${githubOwner}/${githubRepo}@${githubBranch}/public/images/products/${safeFilename}`;
 
     return {
       statusCode: 200,

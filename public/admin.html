@@ -526,17 +526,18 @@
           refreshImageGrid();
 
           try {
-            const base64 = await fileToBase64(file);
+            const { base64, extension } = await resizeAndConvert(file);
+            const safeName = file.name.replace(/\.[^.]+$/, '') + '.' + extension;
             const res    = await fetch('/.netlify/functions/admin-upload', {
               method:  'POST',
               headers: { 'Content-Type': 'application/json' },
-              body:    JSON.stringify({ token, filename: file.name, contentBase64: base64 }),
+              body:    JSON.stringify({ token, filename: safeName, contentBase64: base64 }),
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.message ?? `Fehler ${res.status}`);
 
             currentImages[uploadIdx] = data.path;
-            showToast(`„${file.name}" hochgeladen.`, 'success');
+            showToast(`„${safeName}" hochgeladen (optimiert).`, 'success');
           } catch (err) {
             currentImages.splice(uploadIdx, 1);
             showToast(`Upload fehlgeschlagen: ${err.message}`, 'error');
@@ -866,16 +867,17 @@
       if (btn) { btn.disabled = true; btn.textContent = 'Lädt…'; }
 
       try {
-        const base64 = await fileToBase64(file);
+        const { base64, extension } = await resizeAndConvert(file);
+        const safeName = file.name.replace(/\.[^.]+$/, '') + '.' + extension;
         const res = await fetch('/.netlify/functions/admin-upload', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ token, filename: file.name, contentBase64: base64 }),
+          body:    JSON.stringify({ token, filename: safeName, contentBase64: base64 }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message ?? `Fehler ${res.status}`);
         categories[idx].image = data.path;
-        showToast('Kategoriebild hochgeladen.', 'success');
+        showToast('Kategoriebild hochgeladen (optimiert).', 'success');
       } catch (err) {
         showToast(`Upload fehlgeschlagen: ${err.message}`, 'error');
       }
@@ -913,12 +915,36 @@
       }
     }
 
-    // ── Hilfs: Datei → Base64 ─────────────────────────────────
-    function fileToBase64(file) {
+    // ── Hilfs: Bild verkleinern + zu Base64 ──────────────────
+    // Skaliert auf maxPx (längste Seite), exportiert als WebP oder JPEG
+    function resizeAndConvert(file, maxPx = 800, quality = 0.85) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload  = (e) => resolve(e.target.result.split(',')[1]);
         reader.onerror = reject;
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onerror = reject;
+          img.onload = () => {
+            let w = img.width, h = img.height;
+            if (w > maxPx || h > maxPx) {
+              if (w >= h) { h = Math.round(h * maxPx / w); w = maxPx; }
+              else        { w = Math.round(w * maxPx / h); h = maxPx; }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width  = w;
+            canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            // WebP bevorzugen, Fallback auf JPEG
+            const mime   = canvas.toDataURL('image/webp').startsWith('data:image/webp')
+                           ? 'image/webp' : 'image/jpeg';
+            const dataUrl = canvas.toDataURL(mime, quality);
+            resolve({
+              base64:    dataUrl.split(',')[1],
+              extension: mime === 'image/webp' ? 'webp' : 'jpg',
+            });
+          };
+          img.src = e.target.result;
+        };
         reader.readAsDataURL(file);
       });
     }
