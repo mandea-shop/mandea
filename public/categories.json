@@ -1,0 +1,29 @@
+{
+  "categories": [
+    {
+      "id": "ohrringe",
+      "label": "Ohrringe",
+      "idPrefix": "ohr"
+    },
+    {
+      "id": "armbänder",
+      "label": "Armbänder",
+      "idPrefix": "arm"
+    },
+    {
+      "id": "ketten",
+      "label": "Ketten",
+      "idPrefix": "ket"
+    },
+    {
+      "id": "ringe",
+      "label": "Ringe",
+      "idPrefix": "ring"
+    },
+    {
+      "id": "kinderschmuck",
+      "label": "Kinderschmuck",
+      "idPrefix": "kind"
+    }
+  ]
+}
