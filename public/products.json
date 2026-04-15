@@ -6,7 +6,7 @@
       "category": "ohrringe",
       "categoryLabel": "Ohrringe",
       "price": 3900,
-      "priceFormatted": "39,00 €",
+      "priceFormatted": "39,00 €",
       "description": "Zarte Ohrhänger in floralem Design — handgefertigt aus goldfarbener Metallegierung mit warmem Schimmer. Jedes Paar ein kleines Unikat, das das Licht einfängt.",
       "details": [
         "Material: Metallegierung, goldbeschichtet",
@@ -15,7 +15,9 @@
         "Handgefertigt in kleiner Auflage"
       ],
       "badge": "Unikat",
-      "images": [],
+      "images": [
+        "/images/products/ab-01.png"
+      ],
       "inStock": true,
       "featured": true
     },
@@ -227,25 +229,6 @@
       "images": [],
       "inStock": true,
       "featured": true
-    },
-    {
-      "id": "kind-001",
-      "name": "Sonnenblüten Armband",
-      "category": "kinderschmuck",
-      "categoryLabel": "Kinderschmuck",
-      "price": 23100,
-      "priceFormatted": "231,00 €",
-      "description": "asdf",
-      "details": [
-        "asdf",
-        "handmade"
-      ],
-      "badge": null,
-      "images": [
-        "/images/products/ab-01.png"
-      ],
-      "inStock": true,
-      "featured": false
     }
   ]
 }
