@@ -24,8 +24,8 @@
     {
       "id": "ohr-002",
       "name": "Mondstein Creole",
-      "category": "ohrringe",
-      "categoryLabel": "Ohrringe",
+      "category": "kinderschmuck",
+      "categoryLabel": "Kinderschmuck",
       "price": 4500,
       "priceFormatted": "45,00 €",
       "description": "Großzügige Creolen mit eingearbeitetem Mondstein-Cabochon in zartem Lavendel. Die weiche Steinfarbe harmoniert wunderschön mit wärmerem Goldfarbton.",
@@ -35,7 +35,7 @@
         "Verschluss: Scharnierverschluss",
         "Handgefertigt"
       ],
-      "badge": null,
+      "badge": "Neu",
       "images": [
         "/images/products/creolen.png",
         "/images/products/ab-01.png"
