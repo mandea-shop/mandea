@@ -127,10 +127,13 @@ export const handler = async (event) => {
       githubToken
     );
 
+    // GitHub Raw-CDN: sofort verfügbar, kein Netlify-Deploy nötig
+    const rawUrl = `https://raw.githubusercontent.com/${githubOwner}/${githubRepo}/${githubBranch}/public/images/products/${safeFilename}`;
+
     return {
       statusCode: 200,
       headers: HEADERS,
-      body: JSON.stringify({ ok: true, path: `/images/products/${safeFilename}` }),
+      body: JSON.stringify({ ok: true, path: rawUrl }),
     };
   } catch (err) {
     console.error('GitHub Upload fehlgeschlagen:', err.message);
