@@ -14,9 +14,9 @@
         "Verschluss: Stecker mit Sicherheitsmutter",
         "Handgefertigt in kleiner Auflage"
       ],
-      "badge": "Unikat",
+      "badge": "Neu",
       "images": [
-        "/images/products/ab-01.png"
+        "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/ab-01.png"
       ],
       "inStock": true,
       "featured": true
@@ -35,10 +35,9 @@
         "Verschluss: Scharnierverschluss",
         "Handgefertigt"
       ],
-      "badge": "Neu",
+      "badge": "Unikat",
       "images": [
-        "/images/products/creolen.png",
-        "/images/products/ab-01.png"
+        "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/creolen.png"
       ],
       "inStock": true,
       "featured": true
@@ -68,7 +67,7 @@
       "category": "armbänder",
       "categoryLabel": "Armbänder",
       "price": 5500,
-      "priceFormatted": "55,00 €",
+      "priceFormatted": "55,00 €",
       "description": "Filigranes Armband mit handgeprägten Blütenranken — jedes Stück trägt eine leicht andere Prägung, was es zum echten Unikat macht. Mit Verlängerungskette.",
       "details": [
         "Material: Metallegierung, goldbeschichtet",
@@ -76,8 +75,10 @@
         "Verschluss: Federringverschluss",
         "Handgeprägt, Unikat"
       ],
-      "badge": "Unikat",
-      "images": [],
+      "badge": "Sale",
+      "images": [
+        "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/straberry.jpg"
+      ],
       "inStock": true,
       "featured": true
     },
