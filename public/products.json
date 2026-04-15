@@ -237,17 +237,17 @@
       "priceFormatted": "39,00 €",
       "description": "Super geiles Teil",
       "details": [
-        "Aus echten Sonnenblüten",
-        "handmade",
-        "Mondverschluß",
-        "sehr heiß"
+        "asdf",
+        "asdf",
+        "fa",
+        "asd"
       ],
       "badge": "Neu",
       "images": [
         "/images/products/ab-01.png"
       ],
       "inStock": true,
-      "featured": true
+      "featured": false
     }
   ]
 }
