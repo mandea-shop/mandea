@@ -134,8 +134,8 @@ export const handler = async (event) => {
   const newContent = JSON.stringify({ products }, null, 2);
   const contentB64 = Buffer.from(newContent, 'utf-8').toString('base64');
 
-  const now     = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });
-  const commitMsg = `Produkte aktualisiert via Admin — ${now}`;
+  const now       = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });
+  const commitMsg = `[skip ci] Produkte aktualisiert via Admin — ${now}`;
 
   // ── Commit via GitHub API ─────────────────────────────────
   try {

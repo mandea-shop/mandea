@@ -159,7 +159,7 @@
     // ── Kategorien aus JSON laden und Tabs bauen ──────────────
     async function loadFilterTabs() {
       try {
-        const res  = await fetch('/categories.json');
+        const res  = await fetch('/.netlify/functions/get-categories');
         const data = await res.json();
         const tabs = document.getElementById('filter-tabs');
         data.categories.forEach(cat => {

@@ -32,7 +32,7 @@ export async function loadProducts() {
   if (_productsCache) return _productsCache;
 
   // Pfad relativ zur Domain-Root
-  const res = await fetch('/products.json');
+  const res = await fetch('/.netlify/functions/get-products');
   if (!res.ok) throw new Error('Produkte konnten nicht geladen werden.');
   const data = await res.json();
   _productsCache = data.products;

@@ -823,7 +823,7 @@
 
     async function loadCategories() {
       try {
-        const res  = await fetch('/categories.json');
+        const res  = await fetch('/.netlify/functions/get-categories');
         const data = await res.json();
         categories = data.categories ?? [];
         renderFilterSelect();
@@ -835,7 +835,7 @@
 
     async function loadProducts() {
       try {
-        const res  = await fetch('/products.json');
+        const res  = await fetch('/.netlify/functions/get-products');
         const data = await res.json();
         products   = data.products ?? [];
         renderList();

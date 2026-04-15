@@ -112,14 +112,14 @@ export const handler = async (event) => {
 
   const newContent = JSON.stringify({ categories }, null, 2);
   const contentB64 = Buffer.from(newContent, 'utf-8').toString('base64');
-  const now        = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });
+  const now = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin' });
 
   try {
     await githubRequest(
       'PUT',
       `/repos/${githubOwner}/${githubRepo}/contents/${filePath}`,
       {
-        message: `Kategorien aktualisiert via Admin — ${now}`,
+        message: `[skip ci] Kategorien aktualisiert via Admin — ${now}`,
         content: contentB64,
         sha:     currentSha,
         branch:  githubBranch,
