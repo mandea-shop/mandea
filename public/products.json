@@ -23,7 +23,7 @@
     },
     {
       "id": "ohr-002",
-      "name": "Mondstein Creolen",
+      "name": "Mondstein Creole",
       "category": "ohrringe",
       "categoryLabel": "Ohrringe",
       "price": 4500,
@@ -37,6 +37,7 @@
       ],
       "badge": null,
       "images": [
+        "/images/products/creolen.png",
         "/images/products/ab-01.png"
       ],
       "inStock": true,
