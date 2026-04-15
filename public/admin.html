@@ -819,6 +819,8 @@
     // ── Daten laden ───────────────────────────────────────────
     async function loadAll() {
       await Promise.all([loadCategories(), loadProducts()]);
+      // Kategorien-Zähler neu rendern, jetzt wo Produkte auch geladen sind
+      renderCategoriesList();
     }
 
     async function loadCategories() {

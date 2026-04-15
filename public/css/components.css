@@ -349,20 +349,18 @@
 }
 
 .product-card__image {
-  display: block;          /* <a> muss block sein damit aspect-ratio greift */
-  position: relative;
+  display: block;
   aspect-ratio: 3 / 4;
   overflow: hidden;
   background-color: var(--color-bg-alt);
+  /* Kein position:relative nötig — img ist NICHT absolute */
 }
 
 .product-card__image img {
-  position: absolute;      /* aus dem Flow nehmen, exakt in den Container einpassen */
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;   /* Schmuck oben scharf, Hintergrund unten gecroppt */
+  object-position: center top;
   display: block;
   transition: transform var(--transition-slow);
 }

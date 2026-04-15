@@ -119,7 +119,7 @@ export const handler = async (event) => {
       'PUT',
       `/repos/${githubOwner}/${githubRepo}/contents/${filePath}`,
       {
-        message: `Produktfoto hochgeladen: ${safeFilename}`,
+        message: `[skip ci] Produktfoto hochgeladen: ${safeFilename}`,
         content: contentBase64,
         ...(existingSha ? { sha: existingSha } : {}),
         branch: githubBranch,
