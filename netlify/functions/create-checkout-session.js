@@ -16,24 +16,40 @@
 // ============================================================
 
 import Stripe from 'stripe';
-import { readFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// Produkte von GitHub API laden (identisch zu get-products.js)
+async function loadProducts() {
+  const owner  = process.env.GITHUB_OWNER;
+  const repo   = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH ?? 'main';
+  const token  = process.env.GITHUB_TOKEN;
 
-// products.json liegt im Repo-Root (zwei Ebenen über functions/)
-const PRODUCTS_PATH = join(__dirname, '../../products.json');
+  if (!owner || !repo || !token) {
+    throw new Error('GitHub-Konfiguration fehlt.');
+  }
 
-function loadProducts() {
-  const raw = readFileSync(PRODUCTS_PATH, 'utf-8');
-  return JSON.parse(raw).products;
+  const res = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/contents/public/products.json?ref=${branch}`,
+    {
+      headers: {
+        'Authorization':        `Bearer ${token}`,
+        'Accept':               'application/vnd.github.raw+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    }
+  );
+
+  if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+  const data = await res.json();
+  return data.products ?? [];
 }
 
 const ALLOWED_ORIGINS = [
-  'https://mandea.netlify.app',   // ← nach Deploy durch echte Domain ersetzen
+  'https://mandea.netlify.app',
+  'https://mandea.de',
+  'https://www.mandea.de',
   'http://localhost:3000',
-  'http://localhost:8888',        // netlify dev Standard-Port
+  'http://localhost:8888',
 ];
 
 export const handler = async (event) => {
