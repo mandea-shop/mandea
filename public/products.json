@@ -49,7 +49,7 @@
       "category": "ohrringe",
       "categoryLabel": "Ohrringe",
       "price": 3200,
-      "priceFormatted": "32,00 €",
+      "priceFormatted": "32,00 €",
       "description": "Tropfenförmige Ohrhänger mit matter Terrakotta-Emaille-Füllung. Erdige Töne treffen auf goldene Fassung — ein Statement-Piece für warme Herbsttage.",
       "details": [
         "Material: Metallegierung, goldbeschichtet, Emaille",
@@ -58,7 +58,9 @@
         "Kleinserie, handgefertigt"
       ],
       "badge": "Neu",
-      "images": [],
+      "images": [
+        "https://cdn.jsdelivr.net/gh/mandea-shop/mandea@main/public/images/products/screenshot_20260328_074451_gallery.jpg"
+      ],
       "inStock": true,
       "featured": false
     },
