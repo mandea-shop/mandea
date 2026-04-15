@@ -141,60 +141,8 @@
         </div>
         <div class="divider"></div>
 
-        <div class="categories__grid">
-
-          <a href="/shop.html?kategorie=ohrringe" class="category-card" aria-label="Ohrringe entdecken">
-            <div class="category-card__image">
-              <div class="img-placeholder">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="2"/><path d="M12 8c0 4-4 8-4 8h8s-4-4-4-8z"/></svg>
-              </div>
-            </div>
-            <div class="category-card__body">
-              <h3>Ohrringe</h3>
-              <p>Creolen, Stecker &amp; Hänger</p>
-              <span class="category-card__arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-
-          <a href="/shop.html?kategorie=armbänder" class="category-card" aria-label="Armbänder entdecken">
-            <div class="category-card__image">
-              <div class="img-placeholder">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 010 16"/></svg>
-              </div>
-            </div>
-            <div class="category-card__body">
-              <h3>Armbänder</h3>
-              <p>Ketten, Armreifen &amp; Charms</p>
-              <span class="category-card__arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-
-          <a href="/shop.html?kategorie=ketten" class="category-card" aria-label="Ketten entdecken">
-            <div class="category-card__image">
-              <div class="img-placeholder">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-              </div>
-            </div>
-            <div class="category-card__body">
-              <h3>Ketten</h3>
-              <p>Colliers, Choker &amp; Anhänger</p>
-              <span class="category-card__arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-
-          <a href="/shop.html?kategorie=ringe" class="category-card" aria-label="Ringe entdecken">
-            <div class="category-card__image">
-              <div class="img-placeholder">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="10"/></svg>
-              </div>
-            </div>
-            <div class="category-card__body">
-              <h3>Ringe</h3>
-              <p>Siegel, Bandringe &amp; Sets</p>
-              <span class="category-card__arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-
+        <div class="categories__grid" id="categories-grid">
+          <!-- per JS aus Kategorien-API geladen -->
         </div>
       </div>
     </section>
@@ -363,12 +311,7 @@
 
         <div class="footer__col">
           <p class="footer__heading">Shop</p>
-          <nav class="footer__links" aria-label="Shop-Navigation">
-            <a href="/shop.html?kategorie=ohrringe">Ohrringe</a>
-            <a href="/shop.html?kategorie=armbänder">Armbänder</a>
-            <a href="/shop.html?kategorie=ketten">Ketten</a>
-            <a href="/shop.html?kategorie=ringe">Ringe</a>
-          </nav>
+          <nav class="footer__links" id="footer-shop-links" aria-label="Shop-Navigation"></nav>
         </div>
 
         <div class="footer__col">
@@ -400,13 +343,46 @@
 
 
   <script type="module">
-    import { initNavbar, updateCartBadge, loadProducts, addToCart, formatPrice } from '/js/utils.js';
+    import { initNavbar, updateCartBadge, loadProducts, addToCart, formatPrice, loadFooterCategories } from '/js/utils.js';
 
     initNavbar();
     updateCartBadge();
+    loadFooterCategories();
 
     // Footer-Jahr
     document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    // ── Kategorie-Kacheln dynamisch laden ─────────────────────
+    async function renderCategories() {
+      const grid = document.getElementById('categories-grid');
+      if (!grid) return;
+      try {
+        const res  = await fetch('/.netlify/functions/get-categories');
+        const data = await res.json();
+        const cats = data.categories ?? [];
+        grid.innerHTML = cats.map(c => `
+          <a href="/shop.html?kategorie=${encodeURIComponent(c.id)}"
+             class="category-card animate-fadein"
+             aria-label="${c.label} entdecken">
+            <div class="category-card__image">
+              ${c.image
+                ? `<img src="${c.image}" alt="${c.label}" loading="lazy">`
+                : `<div class="img-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  </div>`
+              }
+            </div>
+            <div class="category-card__body">
+              <h3>${c.label}</h3>
+              ${c.description ? `<p>${c.description}</p>` : ''}
+              <span class="category-card__arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
+        `).join('');
+      } catch (err) {
+        console.error('Kategorien konnten nicht geladen werden:', err);
+      }
+    }
 
     // Featured Produkte laden
     async function renderFeatured() {
@@ -461,6 +437,7 @@
       }
     }
 
+    renderCategories();
     renderFeatured();
   </script>
 

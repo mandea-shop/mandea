@@ -222,3 +222,34 @@ export function getCartTotal() {
 export function getCartCount() {
   return getCart().reduce((sum, item) => sum + item.qty, 0);
 }
+
+
+// ── Kategorien laden ──────────────────────────────────
+
+let _categoriesCache = null;
+
+export async function loadCategories() {
+  if (_categoriesCache) return _categoriesCache;
+  const res = await fetch('/.netlify/functions/get-categories');
+  if (!res.ok) throw new Error('Kategorien konnten nicht geladen werden.');
+  const data = await res.json();
+  _categoriesCache = data.categories ?? [];
+  return _categoriesCache;
+}
+
+/**
+ * Befüllt den Footer-Shop-Nav dynamisch aus der Kategorien-API.
+ * Voraussetzung: <nav id="footer-shop-links"> im HTML.
+ */
+export async function loadFooterCategories() {
+  const el = document.getElementById('footer-shop-links');
+  if (!el) return;
+  try {
+    const cats = await loadCategories();
+    el.innerHTML = cats.map(c =>
+      `<a href="/shop.html?kategorie=${encodeURIComponent(c.id)}">${c.label}</a>`
+    ).join('');
+  } catch {
+    // Fallback: leer lassen
+  }
+}

@@ -19,7 +19,7 @@
 }
 
 .product-detail__main-img {
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   border-radius: var(--radius-xl);
   overflow: hidden;
   background-color: var(--color-bg-alt);

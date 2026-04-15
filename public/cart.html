@@ -133,7 +133,7 @@
         </div>
         <div class="footer__col">
           <p class="footer__heading">Shop</p>
-          <nav class="footer__links"><a href="/shop.html?kategorie=ohrringe">Ohrringe</a><a href="/shop.html?kategorie=armbänder">Armbänder</a><a href="/shop.html?kategorie=ketten">Ketten</a><a href="/shop.html?kategorie=ringe">Ringe</a></nav>
+          <nav class="footer__links" id="footer-shop-links" aria-label="Shop-Navigation"></nav>
         </div>
         <div class="footer__col">
           <p class="footer__heading">Info</p>
@@ -155,10 +155,11 @@
     import {
       initNavbar, updateCartBadge,
       getCart, removeFromCart, updateQty,
-      getCartTotal, formatPrice, showToast
+      getCartTotal, formatPrice, showToast, loadFooterCategories
     } from '/js/utils.js';
 
     initNavbar();
+    loadFooterCategories();
     document.getElementById('footer-year').textContent = new Date().getFullYear();
 
     const FREE_SHIPPING_THRESHOLD = 6000; // 60,00 € in Cent

@@ -350,10 +350,9 @@
 
 .product-card__image {
   display: block;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   background-color: var(--color-bg-alt);
-  /* Kein position:relative nötig — img ist NICHT absolute */
 }
 
 .product-card__image img {

@@ -136,6 +136,11 @@
                   <input class="form-input" type="text" id="new-cat-label"
                          placeholder="z.B. Kinderschmuck">
                 </div>
+                <div class="form-group">
+                  <label class="form-label" for="new-cat-desc">Beschreibung (optional)</label>
+                  <input class="form-input" type="text" id="new-cat-desc"
+                         placeholder="z.B. Creolen, Stecker &amp; Hänger">
+                </div>
                 <div class="form-row">
                   <div class="form-group">
                     <label class="form-label" for="new-cat-id">ID (URL-Slug) *</label>
@@ -152,6 +157,8 @@
                 </div>
                 <button class="btn btn--secondary" id="add-cat-btn">+ Kategorie hinzufügen</button>
               </div>
+              <!-- Versteckter File-Picker für Kategorie-Bilder -->
+              <input type="file" id="cat-file-picker" accept="image/jpeg,image/png,image/webp" style="display:none">
             </div>
           </div>
 
@@ -675,22 +682,52 @@
 
       el.innerHTML = categories.map((c, i) => `
         <div class="admin-cat-row" data-id="${c.id}">
+          <div class="admin-cat-row__thumb">
+            ${c.image
+              ? `<img src="${c.image}" alt="${c.label}" loading="lazy">`
+              : `<div class="admin-cat-row__no-img"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
+            }
+          </div>
           <div class="admin-cat-row__info">
             <strong>${c.label}</strong>
             <span class="admin-cat-row__meta">ID: <code>${c.id}</code> · Prefix: <code>${c.idPrefix}</code></span>
+            <input class="form-input cat-desc-input" type="text"
+                   value="${(c.description ?? '').replace(/"/g, '&quot;')}"
+                   placeholder="Kurzbeschreibung (z.B. Creolen, Stecker &amp; Hänger)"
+                   data-index="${i}"
+                   style="margin-top:var(--space-2);font-size:var(--text-sm);">
           </div>
           <div class="admin-cat-row__count">
             ${products.filter(p => p.category === c.id).length} Produkte
           </div>
-          <button class="btn btn--ghost btn--sm admin-cat-remove"
-                  data-index="${i}"
-                  ${products.some(p => p.category === c.id)
-                    ? 'disabled title="Kategorie enthält noch Produkte"'
-                    : 'style="color: var(--color-error);"'}>
-            Entfernen
-          </button>
+          <div class="admin-cat-row__actions">
+            <button class="btn btn--ghost btn--sm cat-img-btn" data-index="${i}">
+              ${c.image ? 'Bild ändern' : 'Bild hochladen'}
+            </button>
+            <button class="btn btn--ghost btn--sm admin-cat-remove"
+                    data-index="${i}"
+                    ${products.some(p => p.category === c.id)
+                      ? 'disabled title="Kategorie enthält noch Produkte"'
+                      : 'style="color: var(--color-error);"'}>
+              Entfernen
+            </button>
+          </div>
         </div>
       `).join('');
+
+      el.querySelectorAll('.cat-desc-input').forEach(input => {
+        input.addEventListener('input', () => {
+          categories[Number(input.dataset.index)].description = input.value;
+        });
+      });
+
+      el.querySelectorAll('.cat-img-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const picker = document.getElementById('cat-file-picker');
+          picker.dataset.catIndex = btn.dataset.index;
+          picker.click();
+        });
+      });
 
       el.querySelectorAll('.admin-cat-remove:not([disabled])').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -739,8 +776,10 @@
         return;
       }
 
-      categories.push({ id, label, idPrefix: prefix });
+      const desc = document.getElementById('new-cat-desc').value.trim();
+      categories.push({ id, label, idPrefix: prefix, description: desc, image: '' });
       document.getElementById('new-cat-label').value     = '';
+      document.getElementById('new-cat-desc').value      = '';
       document.getElementById('new-cat-id').value        = '';
       document.getElementById('new-cat-prefix').value    = '';
       document.getElementById('new-cat-id').dataset.auto = 'false';
@@ -814,6 +853,33 @@
       token = null;
       adminApp.classList.add('hidden');
       loginScreen.classList.remove('hidden');
+    });
+
+    // ── Kategorie-Bild hochladen ──────────────────────────────
+    document.getElementById('cat-file-picker')?.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      e.target.value = '';
+
+      const idx = Number(e.target.dataset.catIndex);
+      const btn = document.querySelector(`.cat-img-btn[data-index="${idx}"]`);
+      if (btn) { btn.disabled = true; btn.textContent = 'Lädt…'; }
+
+      try {
+        const base64 = await fileToBase64(file);
+        const res = await fetch('/.netlify/functions/admin-upload', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ token, filename: file.name, contentBase64: base64 }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message ?? `Fehler ${res.status}`);
+        categories[idx].image = data.path;
+        showToast('Kategoriebild hochgeladen.', 'success');
+      } catch (err) {
+        showToast(`Upload fehlgeschlagen: ${err.message}`, 'error');
+      }
+      renderCategoriesList();
     });
 
     // ── Daten laden ───────────────────────────────────────────
