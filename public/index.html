@@ -625,8 +625,10 @@
           const d = await res.json().catch(() => ({}));
           throw new Error(d.error ?? 'Fehler beim Anmelden.');
         }
-        document.getElementById('newsletter-form').style.display    = 'none';
-        document.getElementById('newsletter-success').style.display = 'flex';
+        document.getElementById('newsletter-form').style.display = 'none';
+        const nlSuccess = document.getElementById('newsletter-success');
+        nlSuccess.classList.remove('hidden');
+        nlSuccess.style.display = 'flex';
       } catch (err) {
         errEl.textContent = err.message;
         errEl.classList.remove('hidden');
