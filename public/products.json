@@ -13,25 +13,25 @@
         {
           "size": "XS",
           "price": 3900,
-          "stock": null,
+          "stock": 3,
           "inStock": true
         },
         {
           "size": "S",
           "price": 3900,
           "stock": null,
-          "inStock": true
+          "inStock": false
         },
         {
           "size": "M",
           "price": 3900,
-          "stock": null,
+          "stock": 2,
           "inStock": true
         },
         {
           "size": "L",
           "price": 3900,
-          "stock": null,
+          "stock": 4,
           "inStock": true
         }
       ],
@@ -42,7 +42,7 @@
         "Verschluss: Stecker mit Sicherheitsmutter",
         "Handgefertigt in kleiner Auflage"
       ],
-      "badge": "Neu",
+      "badge": "Unikat",
       "images": [
         "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/ab-01.png",
         "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/file_0000000024487243a9b2f05f4a808fb1.png"
@@ -62,25 +62,25 @@
         {
           "size": "XS",
           "price": 4500,
-          "stock": null,
+          "stock": 2,
           "inStock": true
         },
         {
           "size": "S",
           "price": 4500,
-          "stock": null,
+          "stock": 4,
           "inStock": true
         },
         {
           "size": "M",
           "price": 4500,
-          "stock": null,
+          "stock": 3,
           "inStock": true
         },
         {
           "size": "L",
           "price": 4500,
-          "stock": null,
+          "stock": 1,
           "inStock": true
         }
       ],
