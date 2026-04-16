@@ -200,9 +200,34 @@
       "categoryLabel": "Armbänder",
       "price": 4800,
       "priceFormatted": "48,00 €",
-      "stock": 1,
+      "stock": null,
       "inStock": true,
-      "variants": [],
+      "variants": [
+        {
+          "size": "XS",
+          "price": 4800,
+          "stock": 2,
+          "inStock": true
+        },
+        {
+          "size": "S",
+          "price": 4800,
+          "stock": 1,
+          "inStock": true
+        },
+        {
+          "size": "M",
+          "price": 4800,
+          "stock": 3,
+          "inStock": true
+        },
+        {
+          "size": "L",
+          "price": 4800,
+          "stock": null,
+          "inStock": true
+        }
+      ],
       "description": "Eleganter Armreif mit aufgefädelten Süßwasserperlen und goldenen Zwischenteilen. Schlichter Luxus für jeden Tag.",
       "details": [
         "Material: Metallegierung, goldbeschichtet, Süßwasserperlen",
