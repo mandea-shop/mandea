@@ -17,6 +17,15 @@
       "date": "2026-04-16",
       "approved": true,
       "archived": false
+    },
+    {
+      "id": "r1776335627903",
+      "name": "Hugo",
+      "email": "tieger@duck.com",
+      "rating": 5,
+      "text": "Hugo ist der Beste!",
+      "date": "2026-04-16",
+      "approved": false
     }
   ]
 }
