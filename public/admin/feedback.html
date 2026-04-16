@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback-Verwaltung — Mandea Admin</title>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Jost', system-ui, sans-serif; background: #FAF7F2; color: #2E1F14; min-height: 100vh; }
+    a { color: #B89A6A; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Login */
+    .login { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+    .login__card { background: #fff; border-radius: 16px; padding: 40px; width: 100%; max-width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+    .login__logo { font-size: 1.5rem; font-weight: 300; letter-spacing: 0.1em; text-align: center; margin-bottom: 8px; }
+    .login__logo span { color: #B89A6A; }
+    .login__sub { font-size: 0.8rem; text-align: center; color: #888; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 28px; }
+    .login__input { width: 100%; padding: 12px 16px; border: 1.5px solid #e8e0d8; border-radius: 8px; font-size: 0.95rem; margin-bottom: 12px; outline: none; background: #FAF7F2; }
+    .login__input:focus { border-color: #B89A6A; }
+    .login__btn { width: 100%; padding: 12px; background: #B89A6A; color: #fff; border: none; border-radius: 8px; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
+    .login__btn:hover { background: #a08860; }
+    .login__error { color: #c45b5b; font-size: 0.8rem; text-align: center; margin-top: 10px; min-height: 18px; }
+
+    /* App */
+    .app { display: none; max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+    .app__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 12px; }
+    .app__title { font-size: 1.4rem; font-weight: 300; }
+    .app__title span { color: #B89A6A; }
+    .app__nav { display: flex; gap: 12px; align-items: center; font-size: 0.8rem; }
+    .app__logout { background: none; border: 1px solid #e8e0d8; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; color: #888; }
+    .app__logout:hover { border-color: #B89A6A; color: #B89A6A; }
+
+    /* Stats */
+    .stats { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .stat { background: #fff; border: 1px solid #e8e0d8; border-radius: 10px; padding: 16px 20px; flex: 1; min-width: 120px; }
+    .stat__num { font-size: 1.8rem; font-weight: 300; color: #B89A6A; }
+    .stat__label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* Filter */
+    .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-btn { padding: 6px 16px; border-radius: 20px; border: 1.5px solid #e8e0d8; background: none; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; }
+    .filter-btn.active, .filter-btn:hover { border-color: #B89A6A; background: #B89A6A; color: #fff; }
+
+    /* Review List */
+    .review-list { display: flex; flex-direction: column; gap: 12px; }
+    .review-item { background: #fff; border: 1px solid #e8e0d8; border-radius: 12px; padding: 20px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
+    .review-item--pending { border-left: 3px solid #f0c070; }
+    .review-item--approved { border-left: 3px solid #6A9C6A; }
+    .review-item__stars { color: #B89A6A; font-size: 0.9rem; margin-bottom: 4px; }
+    .review-item__text { font-size: 0.9rem; color: #555; line-height: 1.6; margin-bottom: 8px; font-style: italic; }
+    .review-item__meta { font-size: 0.75rem; color: #aaa; }
+    .review-item__meta strong { color: #2E1F14; }
+    .review-item__status { display: inline-block; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+    .review-item__status--pending  { background: #fef3cd; color: #856404; }
+    .review-item__status--approved { background: #d1e7dd; color: #0f5132; }
+    .review-item__actions { display: flex; flex-direction: column; gap: 8px; }
+    .btn-approve { background: #6A9C6A; color: #fff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; }
+    .btn-approve:hover { background: #558255; }
+    .btn-approve.is-approved { background: #e8e0d8; color: #555; }
+    .btn-approve.is-approved:hover { background: #d4c8b8; }
+    .btn-delete { background: none; border: 1px solid #c45b5b; color: #c45b5b; border-radius: 6px; padding: 7px 14px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; }
+    .btn-delete:hover { background: #c45b5b; color: #fff; }
+
+    .empty-state { text-align: center; padding: 48px; color: #aaa; font-size: 0.9rem; }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #2E1F14; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 0.85rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Login -->
+  <div class="login" id="login-screen">
+    <div class="login__card">
+      <div class="login__logo">Man<span>dea</span></div>
+      <div class="login__sub">Feedback-Verwaltung</div>
+      <input type="password" class="login__input" id="pw-input" placeholder="Passwort" autocomplete="current-password">
+      <button class="login__btn" id="login-btn">Anmelden</button>
+      <p class="login__error" id="login-error"></p>
+    </div>
+  </div>
+
+  <!-- App -->
+  <div class="app" id="app">
+    <div class="app__header">
+      <h1 class="app__title">Man<span>dea</span> — Feedback</h1>
+      <div class="app__nav">
+        <a href="/admin.html">← Zum Admin</a>
+        <button class="app__logout" id="logout-btn">Abmelden</button>
+      </div>
+    </div>
+
+    <div class="stats" id="stats-bar"></div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">Alle</button>
+      <button class="filter-btn" data-filter="pending">Ausstehend</button>
+      <button class="filter-btn" data-filter="approved">Freigegeben</button>
+    </div>
+
+    <div class="review-list" id="review-list"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const TOKEN_KEY = 'mandea_admin_token';
+    let allReviews  = [];
+    let activeFilter = 'all';
+
+    // ── Auth ──────────────────────────────────────────────────
+    async function login(password) {
+      const res  = await fetch('/.netlify/functions/admin-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message ?? 'Fehler');
+      localStorage.setItem(TOKEN_KEY, data.token);
+      return data.token;
+    }
+
+    async function checkToken(token) {
+      const res = await fetch('/.netlify/functions/admin-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+      return res.ok;
+    }
+
+    function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+    // ── Login-Screen ──────────────────────────────────────────
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      const pw  = document.getElementById('pw-input').value;
+      const err = document.getElementById('login-error');
+      err.textContent = '';
+      try {
+        await login(pw);
+        showApp();
+      } catch (e) {
+        err.textContent = e.message;
+      }
+    });
+
+    document.getElementById('pw-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('login-btn').click();
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.removeItem(TOKEN_KEY);
+      location.reload();
+    });
+
+    // ── App anzeigen ──────────────────────────────────────────
+    async function showApp() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      await loadReviews();
+    }
+
+    // ── Reviews laden ─────────────────────────────────────────
+    async function loadReviews() {
+      const token = getToken();
+      const res   = await fetch('/.netlify/functions/admin-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, action: 'list' }),
+      });
+      const data = await res.json();
+      allReviews = (data.reviews ?? []).reverse(); // neueste zuerst
+      renderStats();
+      renderList();
+    }
+
+    // ── Stats ─────────────────────────────────────────────────
+    function renderStats() {
+      const total    = allReviews.length;
+      const approved = allReviews.filter(r => r.approved).length;
+      const pending  = total - approved;
+      const avg = total > 0
+        ? (allReviews.reduce((s, r) => s + r.rating, 0) / total).toFixed(1)
+        : '—';
+      document.getElementById('stats-bar').innerHTML = `
+        <div class="stat"><div class="stat__num">${total}</div><div class="stat__label">Gesamt</div></div>
+        <div class="stat"><div class="stat__num">${approved}</div><div class="stat__label">Freigegeben</div></div>
+        <div class="stat"><div class="stat__num">${pending}</div><div class="stat__label">Ausstehend</div></div>
+        <div class="stat"><div class="stat__num">${avg} ★</div><div class="stat__label">Ø Bewertung</div></div>
+      `;
+    }
+
+    // ── Liste rendern ─────────────────────────────────────────
+    function renderList() {
+      const filtered = allReviews.filter(r => {
+        if (activeFilter === 'approved') return r.approved;
+        if (activeFilter === 'pending')  return !r.approved;
+        return true;
+      });
+
+      const list = document.getElementById('review-list');
+      if (filtered.length === 0) {
+        list.innerHTML = '<div class="empty-state">Keine Bewertungen gefunden.</div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(r => `
+        <div class="review-item ${r.approved ? 'review-item--approved' : 'review-item--pending'}" data-id="${r.id}">
+          <div>
+            <div class="review-item__stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+            <div class="review-item__text">${escHtml(r.text)}</div>
+            <div class="review-item__meta">
+              <strong>${escHtml(r.name)}</strong> · ${r.date}
+              <span class="review-item__status ${r.approved ? 'review-item__status--approved' : 'review-item__status--pending'}">
+                ${r.approved ? 'Freigegeben' : 'Ausstehend'}
+              </span>
+            </div>
+          </div>
+          <div class="review-item__actions">
+            <button class="btn-approve ${r.approved ? 'is-approved' : ''}" onclick="toggleApprove('${r.id}')">
+              ${r.approved ? 'Sperren' : 'Freigeben'}
+            </button>
+            <button class="btn-delete" onclick="deleteReview('${r.id}')">Löschen</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ── Approve togglen ───────────────────────────────────────
+    async function toggleApprove(id) {
+      const token = getToken();
+      const res   = await fetch('/.netlify/functions/admin-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, action: 'approve', id }),
+      });
+      if (!res.ok) { showToast('Fehler beim Speichern.'); return; }
+      const data = await res.json();
+      allReviews = (data.reviews ?? []).reverse();
+      renderStats();
+      renderList();
+      showToast('Gespeichert.');
+    }
+
+    // ── Löschen ───────────────────────────────────────────────
+    async function deleteReview(id) {
+      if (!confirm('Bewertung wirklich löschen?')) return;
+      const token = getToken();
+      const res   = await fetch('/.netlify/functions/admin-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, action: 'delete', id }),
+      });
+      if (!res.ok) { showToast('Fehler beim Löschen.'); return; }
+      const data = await res.json();
+      allReviews = (data.reviews ?? []).reverse();
+      renderStats();
+      renderList();
+      showToast('Gelöscht.');
+    }
+
+    // ── Filter ────────────────────────────────────────────────
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        renderList();
+      });
+    });
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ── Init ──────────────────────────────────────────────────
+    (async () => {
+      const token = getToken();
+      if (token && await checkToken(token)) {
+        showApp();
+      }
+    })();
+  </script>
+</body>
+</html>

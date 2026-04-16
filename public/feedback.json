@@ -1,30 +1,43 @@
 {
   "reviews": [
     {
-      "id": "r1776328689828",
-      "name": "Jessi",
+      "id": "r001",
+      "name": "Laura M.",
       "rating": 5,
-      "text": "Super freundlicher Kontakt und echt toller Schmuck. Hab mich sehr über meine Ohrringe und die Armbänder gefreut. Immer wieder gerne!",
-      "date": "2026-04-16",
+      "text": "Absolut wunderschöner Schmuck! Das Armband ist noch schöner als auf den Fotos. Sehr schnelle Lieferung und so liebevoll verpackt — man merkt sofort, dass hier jemand mit Herzblut dabei ist. Ich bin begeistert und werde definitiv wieder bestellen!",
+      "date": "2025-03-12",
       "approved": true
     },
     {
-      "id": "r1776332029246",
-      "name": "Hans Wurst",
-      "email": "tieger@duck.com",
+      "id": "r002",
+      "name": "Sophie K.",
       "rating": 5,
-      "text": "Geilster Schmuck ever! Hier kauf ich nur noch ein.",
-      "date": "2026-04-16",
-      "approved": true,
-      "archived": false
+      "text": "Ich habe eine Kette als Geschenk gekauft und meine Freundin war völlig begeistert. Die Qualität ist top und das Stück sieht wirklich einzigartig aus — man merkt, dass es handgemacht ist. Sehr empfehlenswert!",
+      "date": "2025-02-28",
+      "approved": true
     },
     {
-      "id": "r1776335627903",
-      "name": "Hugo",
-      "email": "tieger@duck.com",
+      "id": "r003",
+      "name": "Jana W.",
+      "rating": 4,
+      "text": "Schöne handgemachte Qualität, man sieht die Liebe zum Detail. Kleine Verzögerung bei der Lieferung, aber der Kontakt war sehr freundlich und hilfsbereit. Das Ergebnis hat sich auf jeden Fall gelohnt!",
+      "date": "2025-03-05",
+      "approved": true
+    },
+    {
+      "id": "r004",
+      "name": "Mia H.",
       "rating": 5,
-      "text": "Hugo ist der Beste!",
-      "date": "2026-04-16",
+      "text": "Mein absolutes Lieblingsarmband kommt von Mandea! Ich trage es jeden Tag und bekomme ständig Komplimente. Die Verarbeitung ist perfekt und das Design so besonders — nirgendwo sonst zu finden.",
+      "date": "2025-01-20",
+      "approved": true
+    },
+    {
+      "id": "r005",
+      "name": "Lena R.",
+      "rating": 5,
+      "text": "Endlich einen Shop gefunden, der wirklich handgemachten Schmuck mit Persönlichkeit anbietet! Die Ohrringe sind ein Traum, sehr leicht und trotzdem auffällig. Die Verpackung war auch wunderschön — perfekt als Geschenk. Gerne wieder!",
+      "date": "2025-02-14",
       "approved": true
     }
   ]

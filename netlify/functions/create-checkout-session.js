@@ -212,7 +212,7 @@ export const handler = async (event) => {
   const subtotal = lineItems.reduce(
     (sum, li) => sum + li.price_data.unit_amount * li.quantity, 0
   );
-  const freeShippingThreshold = 6000; // 60 €
+  const freeShippingThreshold = 4500; // 45 €
 
   const shippingOptions = subtotal >= freeShippingThreshold
     ? [{
@@ -243,15 +243,16 @@ export const handler = async (event) => {
 
   try {
     const session = await stripe.checkout.sessions.create({
-      mode:                  'payment',
-      line_items:            lineItems,
-      shipping_options:      shippingOptions,
+      mode:                    'payment',
+      line_items:              lineItems,
+      shipping_options:        shippingOptions,
       shipping_address_collection: {
         allowed_countries: ['DE', 'AT', 'CH'],
       },
-      locale:                'de',
-      success_url:           `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:            `${baseUrl}/cancel.html`,
+      allow_promotion_codes:   true,   // Rabattcodes (z.B. MANDEA10) einlösbar
+      locale:                  'de',
+      success_url:             `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url:              `${baseUrl}/cancel.html`,
       metadata: {
         source: 'mandea-shop',
         items:  JSON.stringify(itemsMeta),

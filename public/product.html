@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Mandea — Produktdetails">
+  <link rel="canonical" href="https://mandea-shop.de/product.html">
+
+  <!-- Open Graph (wird per JS befüllt) -->
+  <meta property="og:site_name" content="Mandea">
+  <meta property="og:type" content="product">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="">
+  <meta property="og:description" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="">
+
   <title>Produkt — Mandea</title>
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/main.css?v=1">
@@ -271,9 +288,52 @@
         }
 
         // Meta-Tags dynamisch setzen
+        const productUrl = `https://mandea-shop.de/product.html?id=${product.id}`;
+        const productImg = product.images?.[0]
+          ? `https://mandea-shop.de${product.images[0]}`
+          : 'https://mandea-shop.de/images/Wer-bin-ich.jpg';
+
         document.title = `${product.name} — Mandea`;
         document.querySelector('meta[name="description"]')
           .setAttribute('content', product.description);
+        document.querySelector('link[rel="canonical"]')
+          .setAttribute('href', productUrl);
+
+        // Open Graph
+        const setOg = (prop, val) => document.querySelector(`meta[property="${prop}"]`)?.setAttribute('content', val);
+        setOg('og:title',       `${product.name} — Mandea`);
+        setOg('og:description', product.description);
+        setOg('og:url',         productUrl);
+        setOg('og:image',       productImg);
+
+        // Twitter Card
+        const setTw = (name, val) => document.querySelector(`meta[name="${name}"]`)?.setAttribute('content', val);
+        setTw('twitter:title',       `${product.name} — Mandea`);
+        setTw('twitter:description', product.description);
+        setTw('twitter:image',       productImg);
+
+        // Schema.org Product
+        const schema = document.createElement('script');
+        schema.type = 'application/ld+json';
+        schema.textContent = JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": product.name,
+          "description": product.description,
+          "image": productImg,
+          "brand": { "@type": "Brand", "name": "Mandea" },
+          "offers": {
+            "@type": "Offer",
+            "price": (product.price / 100).toFixed(2),
+            "priceCurrency": "EUR",
+            "availability": product.inStock
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+            "url": productUrl,
+            "seller": { "@type": "Organization", "name": "Mandea" }
+          }
+        });
+        document.head.appendChild(schema);
 
         // Breadcrumb
         document.getElementById('breadcrumb-category').textContent = product.categoryLabel;

@@ -12,6 +12,70 @@
 
 import Stripe from 'stripe';
 
+// ── Review-Request E-Mail via Resend ───────────────────────
+async function sendReviewRequestEmail(session, resendKey) {
+  const email     = session.customer_details?.email;
+  const firstName = session.customer_details?.name?.split(' ')[0] ?? 'du';
+  const orderId   = session.id;
+  const feedbackUrl = `https://mandea-shop.de/?feedback=true&ref=${orderId}`;
+
+  if (!email) return;
+
+  // 3 Tage in der Zukunft
+  const sendAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+
+  const html = `<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"><style>:root{color-scheme:light}</style></head>
+<body style="margin:0;padding:0;background:#F5F0EA;font-family:'Georgia',serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0EA;padding:40px 20px">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="background:#FFFCF8;border-radius:12px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.06)">
+        <tr><td style="background:#2C1810;padding:28px 24px;text-align:center">
+          <p style="margin:0;font-family:'Georgia',serif;font-size:28px;letter-spacing:0.12em;color:#FFFCF8">MAN<span style="color:#B89A6A">DEA</span></p>
+          <p style="margin:6px 0 0;font-family:'Arial',sans-serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap;color:rgba(255,252,248,0.6)">schmuck. handmade. einzigartig.</p>
+        </td></tr>
+        <tr><td style="padding:48px 40px 32px">
+          <p style="margin:0 0 8px;font-family:'Arial',sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#B89A6A">Wie gefällt dir dein neues Schmuckstück?</p>
+          <h1 style="margin:0 0 24px;font-family:'Georgia',serif;font-size:28px;font-weight:400;color:#2C1810;line-height:1.3">Hallo ${firstName},<br>ich würde mich wirklich sehr über dein Feedback freuen!</h1>
+          <p style="margin:0 0 16px;font-family:'Arial',sans-serif;font-size:15px;line-height:1.7;color:#5C4A3A">Dein MANDEA-Artikel ist hoffentlich gut bei dir angekommen und du hast Freude daran!<br>Dann freue ich mich über ein Feedback von dir!<br>Denn deine Meinung bedeutet mir wirklich viel — sie hilft mir, noch besser zu werden und anderen Kunden bei ihrer Entscheidung.</p>
+          <p style="margin:0 0 32px;font-family:'Arial',sans-serif;font-size:15px;line-height:1.7;color:#5C4A3A">Es dauert nicht mal 1 Minute — versprochen ✦</p>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:0"><tr><td align="center">
+            <a href="${feedbackUrl}" style="display:inline-block;background:#B89A6A;color:#FFFCF8;text-decoration:none;font-family:'Arial',sans-serif;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;padding:14px 36px;border-radius:50px">✦ Bewertung abgeben</a>
+          </td></tr></table>
+        </td></tr>
+        <tr><td style="padding:0 40px"><div style="height:1px;background:#E8DDD4"></div></td></tr>
+        <tr><td style="padding:24px 40px;text-align:center">
+          <p style="margin:0 0 8px;font-family:'Arial',sans-serif;font-size:12px;color:#A08870;line-height:1.7">Bestellung: <code style="background:#F5F0EA;padding:2px 6px;border-radius:4px;font-size:11px">${orderId}</code></p>
+          <p style="margin:0;font-family:'Arial',sans-serif;font-size:12px;color:#A08870;line-height:1.7">
+            <a href="https://mandea-shop.de/contact.html" style="color:#B89A6A;text-decoration:underline">Kontakt</a> ·
+            <a href="https://mandea-shop.de/contact.html#datenschutz" style="color:#B89A6A;text-decoration:underline">Datenschutz</a>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method:  'POST',
+    headers: {
+      'Authorization': `Bearer ${resendKey}`,
+      'Content-Type':  'application/json',
+    },
+    body: JSON.stringify({
+      from:        'MANDEA <info@mandea-shop.de>',
+      to:          [email],
+      subject:     'Wie gefällt dir dein neues Schmuckstück? ✦ Dein Feedback für MANDEA',
+      html,
+      scheduled_at: sendAt, // Resend: in 3 Tagen senden
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(`Resend Fehler: ${err.message ?? res.status}`);
+  }
+}
+
 export const handler = async (event) => {
   const stripeKey     = process.env.STRIPE_SECRET_KEY;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -135,6 +199,19 @@ export const handler = async (event) => {
     }
 
     console.log(`Lagerbestand für Session ${session.id} aktualisiert.`);
+
+    // ── Review-Request E-Mail (geplant für Tag 3) ───────────
+    const resendKey = process.env.RESEND_API_KEY;
+    if (resendKey) {
+      try {
+        await sendReviewRequestEmail(session, resendKey);
+        console.log(`Review-Request für ${session.customer_details?.email} geplant (Tag 3).`);
+      } catch (emailErr) {
+        // E-Mail-Fehler darf den Webhook nicht scheitern lassen
+        console.error('Review-Request E-Mail Fehler:', emailErr.message);
+      }
+    }
+
     return { statusCode: 200, body: JSON.stringify({ ok: true }) };
 
   } catch (err) {

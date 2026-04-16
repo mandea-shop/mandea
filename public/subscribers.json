@@ -1,9 +1,1 @@
-{
-  "subscribers": [
-    {
-      "email": "tieger@duck.com",
-      "date": "2026-04-16",
-      "source": "homepage"
-    }
-  ]
-}
+{ "subscribers": [] }

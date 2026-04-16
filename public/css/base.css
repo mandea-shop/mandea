@@ -7,6 +7,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap');
 
 
+/* --- Utility: globally available on every page --- */
+.hidden { display: none !important; }
+
 /* --- Reset & Box-Sizing --- */
 
 *, *::before, *::after {

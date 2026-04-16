@@ -65,6 +65,11 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/><rect x="3" y="5" width="4" height="4" rx="1"/><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="3" y="15" width="4" height="4" rx="1"/></svg>
             Kategorien
           </button>
+          <button class="admin-nav__item" data-tab="feedback">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Bewertungen
+            <span id="feedback-pending-badge" style="display:none;background:var(--color-terra);color:#fff;font-size:10px;font-weight:700;border-radius:99px;padding:1px 6px;margin-left:auto;line-height:1.6">0</span>
+          </button>
         </nav>
 
         <div class="admin-sidebar__save">
@@ -168,6 +173,28 @@
               Kategorien speichern
             </button>
           </div>
+        </div>
+
+        <!-- Tab: Bewertungen -->
+        <div class="admin-tab" id="tab-feedback">
+          <div class="admin-section-header">
+            <div>
+              <h1>Bewertungen</h1>
+              <p id="feedback-count-label">Wird geladen…</p>
+            </div>
+            <div class="admin-section-header__filters" style="gap:var(--space-2)">
+              <button class="btn btn--ghost btn--sm admin-fb-filter active" data-filter="all">Alle</button>
+              <button class="btn btn--ghost btn--sm admin-fb-filter" data-filter="pending">Ausstehend</button>
+              <button class="btn btn--ghost btn--sm admin-fb-filter" data-filter="approved">Freigegeben</button>
+              <button class="btn btn--ghost btn--sm admin-fb-filter" data-filter="archived">Archiv</button>
+            </div>
+          </div>
+
+          <!-- Statistik-Leiste -->
+          <div id="feedback-stats" style="display:flex;gap:var(--space-4);flex-wrap:wrap;margin-bottom:var(--space-6)"></div>
+
+          <!-- Liste -->
+          <div id="feedback-list"></div>
         </div>
 
       </main>
@@ -1066,9 +1093,237 @@
       renderCategoriesList();
     });
 
+    // ── Bewertungen-Tab ───────────────────────────────────────
+    let feedbackReviews = [];
+    let feedbackFilter  = 'all';
+
+    async function loadFeedback() {
+      try {
+        const res  = await fetch('/.netlify/functions/admin-feedback', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ token, action: 'list' }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        feedbackReviews = data.reviews ?? [];
+        renderFeedbackStats();
+        renderFeedbackList();
+        updateFeedbackBadge();
+      } catch {
+        showToast('Bewertungen konnten nicht geladen werden.', 'error');
+      }
+    }
+
+    function updateFeedbackBadge() {
+      const badge   = document.getElementById('feedback-pending-badge');
+      const pending = feedbackReviews.filter(r => !r.approved).length;
+      if (badge) {
+        badge.textContent  = pending;
+        badge.style.display = pending > 0 ? 'inline-block' : 'none';
+      }
+      const label = document.getElementById('feedback-count-label');
+      if (label) label.textContent =
+        `${feedbackReviews.length} Bewertungen gesamt · ${pending} ausstehend`;
+    }
+
+    function renderFeedbackStats() {
+      const el = document.getElementById('feedback-stats');
+      if (!el) return;
+      const active   = feedbackReviews.filter(r => !r.archived);
+      const total    = active.length;
+      const approved = active.filter(r => r.approved).length;
+      const pending  = active.filter(r => !r.approved).length;
+      const archived = feedbackReviews.filter(r => r.archived).length;
+      const avg      = total > 0
+        ? (active.reduce((s, r) => s + r.rating, 0) / total).toFixed(1)
+        : '—';
+
+      const s  = 'background:var(--color-bg-alt);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-4) var(--space-5);display:flex;flex-direction:column;gap:var(--space-1);min-width:100px;transition:box-shadow .15s,border-color .15s;';
+      const sc = s + 'cursor:pointer;'; // klickbare Kacheln
+      el.innerHTML = `
+        <div style="${sc}" data-fb-stat="all"
+             onmouseenter="this.style.boxShadow='0 2px 10px rgba(0,0,0,.08)';this.style.borderColor='var(--color-gold)'"
+             onmouseleave="this.style.boxShadow='';this.style.borderColor='var(--color-border)'">
+          <strong style="font-size:var(--text-2xl);font-weight:var(--weight-light)">${total}</strong>
+          <span style="font-size:var(--text-xs);color:var(--color-text-light);letter-spacing:.06em;text-transform:uppercase">Aktiv</span>
+        </div>
+        <div style="${sc}border-left:3px solid var(--color-gold)" data-fb-stat="pending"
+             onmouseenter="this.style.boxShadow='0 2px 10px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+          <strong style="font-size:var(--text-2xl);font-weight:var(--weight-light);color:var(--color-terra)">${pending}</strong>
+          <span style="font-size:var(--text-xs);color:var(--color-text-light);letter-spacing:.06em;text-transform:uppercase">Ausstehend</span>
+        </div>
+        <div style="${sc}border-left:3px solid #4caf50" data-fb-stat="approved"
+             onmouseenter="this.style.boxShadow='0 2px 10px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+          <strong style="font-size:var(--text-2xl);font-weight:var(--weight-light)">${approved}</strong>
+          <span style="font-size:var(--text-xs);color:var(--color-text-light);letter-spacing:.06em;text-transform:uppercase">Freigegeben</span>
+        </div>
+        <div style="${s}">
+          <strong style="font-size:var(--text-2xl);font-weight:var(--weight-light)">${avg} ★</strong>
+          <span style="font-size:var(--text-xs);color:var(--color-text-light);letter-spacing:.06em;text-transform:uppercase">Ø Bewertung</span>
+        </div>
+        <div style="${sc}" data-fb-stat="archived"
+             onmouseenter="this.style.boxShadow='0 2px 10px rgba(0,0,0,.08)'" onmouseleave="this.style.boxShadow=''">
+          <strong style="font-size:var(--text-2xl);font-weight:var(--weight-light);color:var(--color-text-light)">${archived}</strong>
+          <span style="font-size:var(--text-xs);color:var(--color-text-light);letter-spacing:.06em;text-transform:uppercase">Archiviert</span>
+        </div>
+      `;
+
+      // Klick auf Stat-Kachel → Filter setzen
+      el.querySelectorAll('[data-fb-stat]').forEach(card => {
+        card.addEventListener('click', () => {
+          feedbackFilter = card.dataset.fbStat;
+          renderFeedbackList();
+          // zugehörigen Filter-Button aktivieren
+          document.querySelectorAll('.admin-fb-filter').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.filter === feedbackFilter);
+          });
+        });
+      });
+    }
+
+    function renderFeedbackList() {
+      const el = document.getElementById('feedback-list');
+      if (!el) return;
+
+      const filtered =
+        feedbackFilter === 'pending'  ? feedbackReviews.filter(r => !r.approved && !r.archived) :
+        feedbackFilter === 'approved' ? feedbackReviews.filter(r =>  r.approved && !r.archived) :
+        feedbackFilter === 'archived' ? feedbackReviews.filter(r =>  r.archived) :
+        [...feedbackReviews].filter(r => !r.archived).reverse(); // "Alle" = aktive neueste zuerst
+
+      document.querySelectorAll('.admin-fb-filter').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === feedbackFilter);
+      });
+
+      if (filtered.length === 0) {
+        el.innerHTML = `<div class="admin-empty"><p>Keine Bewertungen in dieser Ansicht.</p></div>`;
+        return;
+      }
+
+      const rowStyle      = 'background:var(--color-bg-alt);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);margin-bottom:var(--space-3);';
+      const pendingBorder = 'border-left:3px solid var(--color-gold);';
+      const approvedBorder= 'border-left:3px solid #4caf50;';
+
+      el.innerHTML = filtered.map(r => `
+        <div class="admin-feedback-row" data-id="${r.id}"
+             style="${rowStyle}${r.approved ? approvedBorder : pendingBorder}">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-3)">
+            <div style="display:flex;flex-direction:column;gap:var(--space-1)">
+              <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+                <strong style="font-size:var(--text-base)">${r.name}</strong>
+                <span style="color:var(--color-gold);letter-spacing:1px">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                <span style="font-size:var(--text-xs);color:var(--color-text-light)">${new Date(r.date).toLocaleDateString('de-DE')}</span>
+              </div>
+              ${r.email ? `<span style="font-size:var(--text-sm);color:var(--color-text-muted)">✉ ${r.email}</span>` : ''}
+              ${r.orderRef ? `<span style="font-size:var(--text-xs);color:var(--color-text-light)">Bestellung: <code style="background:var(--color-bg);padding:1px 4px;border-radius:3px">${r.orderRef}</code></span>` : ''}
+            </div>
+            <span class="admin-badge ${r.approved ? 'admin-badge--blue' : 'admin-badge--gold'}" style="flex-shrink:0">
+              ${r.approved ? 'Freigegeben' : 'Ausstehend'}
+            </span>
+          </div>
+          <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:var(--leading-loose);font-style:italic;margin-bottom:var(--space-4)">„${r.text}"</p>
+          <div style="display:flex;gap:var(--space-3);flex-wrap:wrap">
+            ${!r.archived ? `
+            <button class="btn btn--secondary btn--sm fb-approve-btn" data-id="${r.id}">
+              ${r.approved ? '↩ Zurückziehen' : '✓ Freigeben'}
+            </button>` : ''}
+            <button class="btn btn--ghost btn--sm fb-archive-btn" data-id="${r.id}"
+                    style="color:var(--color-text-muted)">
+              ${r.archived ? '↩ Aus Archiv' : '⬚ Archivieren'}
+            </button>
+            <button class="btn btn--ghost btn--sm fb-delete-btn" data-id="${r.id}"
+                    style="color:var(--color-error)">
+              Löschen
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      el.querySelectorAll('.fb-approve-btn').forEach(btn => {
+        btn.addEventListener('click', () => approveFeedback(btn.dataset.id));
+      });
+      el.querySelectorAll('.fb-archive-btn').forEach(btn => {
+        btn.addEventListener('click', () => archiveFeedback(btn.dataset.id));
+      });
+      el.querySelectorAll('.fb-delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => deleteFeedback(btn.dataset.id));
+      });
+    }
+
+    async function approveFeedback(id) {
+      try {
+        const res  = await fetch('/.netlify/functions/admin-feedback', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ token, action: 'approve', id }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        feedbackReviews = data.reviews;
+        renderFeedbackStats();
+        renderFeedbackList();
+        updateFeedbackBadge();
+        const r = feedbackReviews.find(x => x.id === id);
+        showToast(r?.approved ? 'Bewertung freigegeben ✓' : 'Freigabe zurückgezogen.', 'success');
+      } catch (err) {
+        showToast(`Fehler: ${err.message}`, 'error');
+      }
+    }
+
+    async function archiveFeedback(id) {
+      const r = feedbackReviews.find(x => x.id === id);
+      try {
+        const res  = await fetch('/.netlify/functions/admin-feedback', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ token, action: 'archive', id }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        feedbackReviews = data.reviews;
+        renderFeedbackStats();
+        renderFeedbackList();
+        updateFeedbackBadge();
+        const updated = feedbackReviews.find(x => x.id === id);
+        showToast(updated?.archived ? `„${r?.name}" archiviert.` : `„${r?.name}" aus Archiv geholt.`, 'info');
+      } catch (err) {
+        showToast(`Fehler: ${err.message}`, 'error');
+      }
+    }
+
+    async function deleteFeedback(id) {
+      const r = feedbackReviews.find(x => x.id === id);
+      if (!confirm(`Bewertung von „${r?.name}" wirklich löschen? Das kann nicht rückgängig gemacht werden.`)) return;
+      try {
+        const res  = await fetch('/.netlify/functions/admin-feedback', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ token, action: 'delete', id }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+        feedbackReviews = data.reviews;
+        renderFeedbackStats();
+        renderFeedbackList();
+        updateFeedbackBadge();
+        showToast('Bewertung gelöscht.', 'info');
+      } catch (err) {
+        showToast(`Fehler: ${err.message}`, 'error');
+      }
+    }
+
+    // Filter-Buttons
+    document.querySelectorAll('.admin-fb-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        feedbackFilter = btn.dataset.filter;
+        renderFeedbackList();
+      });
+    });
+
     // ── Daten laden ───────────────────────────────────────────
     async function loadAll() {
-      await Promise.all([loadCategories(), loadProducts()]);
+      await Promise.all([loadCategories(), loadProducts(), loadFeedback()]);
       // Kategorien-Zähler neu rendern, jetzt wo Produkte auch geladen sind
       renderCategoriesList();
     }

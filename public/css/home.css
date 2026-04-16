@@ -29,29 +29,139 @@
   position: relative;
   z-index: var(--z-base);
   padding-block: var(--space-24) var(--space-20);
-  max-width: 700px;
+  max-width: 680px;
 }
 
 .hero__label {
   display: block;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
   animation: fadeIn 0.6s 0.1s both;
 }
 
-.hero__headline {
-  font-size: var(--text-hero);
-  font-weight: var(--weight-light);
-  letter-spacing: var(--tracking-tight);
-  line-height: 1.1;
-  margin-bottom: var(--space-6);
-  color: var(--color-text);
-  animation: fadeIn 0.6s 0.2s both;
+/* ── Typografisches Logo ──────────────────────────────── */
+
+.hero__brand {
+  width: max-content;
+  max-width: 100%;
+  margin-bottom: var(--space-10);
+  animation: fadeIn 0.7s 0.2s both;
 }
 
-.hero__headline em {
-  font-style: italic;
+.hero__brand-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin-bottom: var(--space-4);
+  white-space: nowrap;
+}
+
+.hero__brand-dark {
+  color: var(--color-text);
+  transition: color 0.35s ease;
+}
+
+.hero__brand-gold {
   color: var(--color-gold);
 }
+
+/* Hover: MAN wird gold, Tagline wird dunkel */
+.hero__brand:hover .hero__brand-dark {
+  color: var(--color-gold);
+}
+
+.hero__brand-tagline {
+  transition: color 0.35s ease;
+}
+
+.hero__brand:hover .hero__brand-tagline {
+  color: var(--color-text);
+}
+
+.hero__brand-line {
+  height: 1px;
+  background: var(--color-gold);
+  width: 100%;
+  margin-bottom: var(--space-4);
+  opacity: 0.65;
+}
+
+.hero__brand-tagline {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.85rem, 2.2vw, 1.45rem);
+  color: var(--color-gold);
+  text-transform: lowercase;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  letter-spacing: 0.02em;
+}
+
+/* ── Blüten-Badge ────────────────────────────────────── */
+
+.hero__badge {
+  position: fixed;
+  top: 90px;
+  right: var(--space-5);
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  z-index: var(--z-overlay, 100);
+}
+
+/* Blüte dreht sich */
+.hero__badge-flower {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: slowSpin 20s linear infinite;
+}
+
+.hero__badge:hover .hero__badge-flower {
+  animation-play-state: paused;
+}
+
+/* Text steht fest */
+.hero__badge-text {
+  position: relative;
+  z-index: 1;
+  color: #FFFCF8;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.5;
+  pointer-events: none;
+  max-width: 56px;
+}
+
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .hero__badge {
+    width: 76px;
+    height: 76px;
+    top: 80px;
+    right: var(--space-3);
+  }
+  .hero__badge-text {
+    font-size: 0.48rem;
+    max-width: 40px;
+  }
+}
+
+/* ── Rest Hero ───────────────────────────────────────── */
 
 .hero__sub {
   font-size: var(--text-lg);
@@ -59,31 +169,14 @@
   line-height: var(--leading-loose);
   margin-bottom: var(--space-10);
   max-width: 500px;
-  animation: fadeIn 0.6s 0.35s both;
+  animation: fadeIn 0.6s 0.4s both;
 }
 
 .hero__cta {
   display: flex;
   gap: var(--space-4);
   flex-wrap: wrap;
-  animation: fadeIn 0.6s 0.5s both;
-}
-
-.hero__ornament {
-  position: absolute;
-  right: -60px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: min(520px, 46vw);
-  color: var(--color-gold);
-  opacity: 0.28;
-  animation: slowSpin 90s linear infinite;
-  pointer-events: none;
-  filter: drop-shadow(0 0 40px rgba(184,154,106,0.15));
-}
-
-@keyframes slowSpin {
-  to { transform: translateY(-50%) rotate(360deg); }
+  animation: fadeIn 0.6s 0.55s both;
 }
 
 @media (max-width: 768px) {
@@ -93,21 +186,10 @@
 
   .hero__content {
     padding-block: var(--space-16) var(--space-16);
-    text-align: center;
   }
 
-  .hero__sub {
-    margin-inline: auto;
-  }
-
-  .hero__cta {
-    justify-content: center;
-  }
-
-  .hero__ornament {
-    right: -120px;
-    opacity: 0.14;
-    width: 80vw;
+  .hero__brand-line {
+    background: linear-gradient(to right, var(--color-gold), transparent 80%);
   }
 
   .hero__br {
@@ -327,64 +409,177 @@
 }
 
 
-/* ── INSTAGRAM BANNER ────────────────────────────────────── */
+/* ── SOCIAL MEDIA ────────────────────────────────────────── */
 
-.instagram-banner {
+.social-section {
   background-color: var(--color-text);
 }
 
-.instagram-banner__inner {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  overflow: hidden;
-  border-radius: var(--radius-xl);
-  padding: var(--space-16) var(--space-12);
+.social-section__inner {
+  text-align: center;
+  padding: var(--space-16) var(--space-8);
 }
 
-.instagram-banner__content {
-  position: relative;
-  z-index: 1;
-  max-width: 480px;
+.social-section__label {
+  color: var(--color-gold-light, var(--color-gold));
 }
 
-.instagram-banner__content h2 {
+.social-section__heading {
   font-size: var(--text-3xl);
   font-weight: var(--weight-light);
   color: var(--color-bg);
-  margin-block: var(--space-3) var(--space-5);
+  margin-block: var(--space-3) var(--space-4);
 }
 
-.instagram-banner__content p {
-  margin-bottom: var(--space-8);
+.social-section__sub {
+  color: rgba(255, 252, 248, 0.65);
+  margin-bottom: var(--space-10);
+  font-size: var(--text-base);
 }
 
-.instagram-banner__btn {
+.social-section__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: center;
+}
+
+.social-section__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(184, 154, 106, 0.35);
+  color: var(--color-bg);
+  padding: var(--space-3) var(--space-7);
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  transition: background var(--transition-base), border-color var(--transition-base), color var(--transition-base);
+}
+
+.social-section__link:hover {
+  background: rgba(184, 154, 106, 0.15);
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+
+/* ── NEWSLETTER ─────────────────────────────────────────── */
+
+.newsletter-section {
+  background: var(--color-text);
+}
+
+.newsletter-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.newsletter-content .label {
+  color: var(--color-gold-light, #d4ba8f);
+}
+
+.newsletter-content h2 {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-light);
+  color: var(--color-bg);
+  margin-block: var(--space-3) var(--space-4);
+  line-height: 1.2;
+}
+
+.newsletter-content p {
+  font-size: var(--text-sm);
+  color: rgba(255,252,248,0.65);
+  line-height: var(--leading-loose);
+}
+
+.newsletter-form__row {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.newsletter-form__input {
+  flex: 1;
+  min-width: 200px;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid rgba(255,252,248,0.2);
+  border-radius: var(--radius-full);
+  background: rgba(255,252,248,0.08);
+  color: var(--color-bg);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.newsletter-form__input::placeholder {
+  color: rgba(255,252,248,0.35);
+}
+
+.newsletter-form__input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.newsletter-form__btn {
+  flex-shrink: 0;
   background-color: var(--color-gold) !important;
   border-color: var(--color-gold) !important;
+  border-radius: var(--radius-full) !important;
+  white-space: nowrap;
 }
 
-.instagram-banner__deco {
-  position: absolute;
-  right: -60px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 400px;
-  opacity: 0.6;
-  pointer-events: none;
+.newsletter-form__hint {
+  font-size: var(--text-xs);
+  color: rgba(255,252,248,0.4);
+  margin-top: var(--space-3);
+  letter-spacing: var(--tracking-wide);
+}
+
+.newsletter-form__error {
+  font-size: var(--text-sm);
+  color: #f4a261;
+  margin-top: var(--space-2);
+}
+
+.newsletter-success {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background: rgba(184,154,106,0.12);
+  border: 1px solid rgba(184,154,106,0.3);
+  border-radius: var(--radius-xl);
+}
+
+.newsletter-success__icon {
+  font-size: 1.5rem;
+  color: var(--color-gold);
+}
+
+.newsletter-success strong {
+  font-size: var(--text-base);
+  color: var(--color-bg);
+}
+
+.newsletter-success p {
+  font-size: var(--text-sm);
+  color: rgba(255,252,248,0.65);
+  line-height: var(--leading-loose);
+  margin: 0;
 }
 
 @media (max-width: 768px) {
-  .instagram-banner__inner {
-    padding: var(--space-10) var(--space-8);
-  }
-
-  .instagram-banner__deco {
-    display: none;
+  .newsletter-inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
   }
 }
-
 
 /* ── TRUST GRID ──────────────────────────────────────────── */
 
