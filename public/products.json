@@ -7,6 +7,34 @@
       "categoryLabel": "Ohrringe",
       "price": 3900,
       "priceFormatted": "39,00 €",
+      "stock": null,
+      "inStock": true,
+      "variants": [
+        {
+          "size": "XS",
+          "price": 3900,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "S",
+          "price": 3900,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "M",
+          "price": 3900,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "L",
+          "price": 3900,
+          "stock": null,
+          "inStock": true
+        }
+      ],
       "description": "Zarte Ohrhänger in floralem Design — handgefertigt aus goldfarbener Metallegierung mit warmem Schimmer. Jedes Paar ein kleines Unikat, das das Licht einfängt.",
       "details": [
         "Material: Metallegierung, goldbeschichtet",
@@ -19,7 +47,6 @@
         "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/ab-01.png",
         "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/file_0000000024487243a9b2f05f4a808fb1.png"
       ],
-      "inStock": true,
       "featured": true
     },
     {
@@ -29,6 +56,34 @@
       "categoryLabel": "Kinderschmuck",
       "price": 4500,
       "priceFormatted": "45,00 €",
+      "stock": null,
+      "inStock": true,
+      "variants": [
+        {
+          "size": "XS",
+          "price": 4500,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "S",
+          "price": 4500,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "M",
+          "price": 4500,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "L",
+          "price": 4500,
+          "stock": null,
+          "inStock": true
+        }
+      ],
       "description": "Großzügige Creolen mit eingearbeitetem Mondstein-Cabochon in zartem Lavendel. Die weiche Steinfarbe harmoniert wunderschön mit wärmerem Goldfarbton.",
       "details": [
         "Material: Metallegierung, goldbeschichtet, synthetischer Mondstein",
@@ -40,7 +95,6 @@
       "images": [
         "https://raw.githubusercontent.com/mandea-shop/mandea/main/public/images/products/creolen.png"
       ],
-      "inStock": true,
       "featured": true
     },
     {
@@ -50,6 +104,34 @@
       "categoryLabel": "Ohrringe",
       "price": 3200,
       "priceFormatted": "32,00 €",
+      "stock": null,
+      "inStock": true,
+      "variants": [
+        {
+          "size": "XS",
+          "price": 3200,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "S",
+          "price": 3200,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "M",
+          "price": 3200,
+          "stock": null,
+          "inStock": true
+        },
+        {
+          "size": "L",
+          "price": 3200,
+          "stock": null,
+          "inStock": true
+        }
+      ],
       "description": "Tropfenförmige Ohrhänger mit matter Terrakotta-Emaille-Füllung. Erdige Töne treffen auf goldene Fassung — ein Statement-Piece für warme Herbsttage.",
       "details": [
         "Material: Metallegierung, goldbeschichtet, Emaille",
@@ -61,7 +143,6 @@
       "images": [
         "https://cdn.jsdelivr.net/gh/mandea-shop/mandea@main/public/images/products/screenshot_20260328_074451_gallery.jpg"
       ],
-      "inStock": true,
       "featured": true
     },
     {
@@ -118,7 +199,10 @@
       "category": "armbänder",
       "categoryLabel": "Armbänder",
       "price": 4800,
-      "priceFormatted": "48,00 €",
+      "priceFormatted": "48,00 €",
+      "stock": 1,
+      "inStock": true,
+      "variants": [],
       "description": "Eleganter Armreif mit aufgefädelten Süßwasserperlen und goldenen Zwischenteilen. Schlichter Luxus für jeden Tag.",
       "details": [
         "Material: Metallegierung, goldbeschichtet, Süßwasserperlen",
@@ -127,9 +211,10 @@
         "Handgefertigt"
       ],
       "badge": null,
-      "images": [],
-      "inStock": true,
-      "featured": false
+      "images": [
+        "https://cdn.jsdelivr.net/gh/mandea-shop/mandea@main/public/images/products/screenshot_20260323_095926_gallery.webp"
+      ],
+      "featured": true
     },
     {
       "id": "arm-003",
