@@ -22,7 +22,8 @@
       "rating": 4,
       "text": "Schöne handgemachte Qualität, man sieht die Liebe zum Detail. Kleine Verzögerung bei der Lieferung, aber der Kontakt war sehr freundlich und hilfsbereit. Das Ergebnis hat sich auf jeden Fall gelohnt!",
       "date": "2025-03-05",
-      "approved": true
+      "approved": false,
+      "archived": true
     },
     {
       "id": "r004",
