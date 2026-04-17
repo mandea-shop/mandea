@@ -963,13 +963,35 @@
     margin: 0;
   }
 
-  /* Alles ausblenden */
-  body * { visibility: hidden; }
+  /* Alles mit display:none entfernen — nimmt keinen Platz mehr ein */
+  .admin-header,
+  .admin-sidebar,
+  .admin-login,
+  .giftcard-inputs,
+  .giftcard-preview-label,
+  .giftcard-preview-hint,
+  .admin-section-header,
+  .admin-tab:not(#tab-giftcard) { display: none !important; }
 
-  /* Nur die Karte anzeigen */
-  .giftcard,
-  .giftcard * { visibility: visible; }
+  /* Layout-Wrapper flachklopfen */
+  .admin-body,
+  .admin-app,
+  .admin-layout,
+  .admin-main,
+  #tab-giftcard,
+  .giftcard-preview-wrap {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
 
+  /* Nur die Karte — exakt A6 quer, seitenausfüllend */
   .giftcard {
     position: fixed;
     inset: 0;
@@ -979,8 +1001,6 @@
     border-radius: 0;
     box-shadow: none;
     margin: 0;
-    top: 0;
-    left: 0;
   }
 }
 
