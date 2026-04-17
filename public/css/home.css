@@ -13,6 +13,7 @@
   align-items: center;
   overflow: hidden;
   background-color: var(--color-bg-alt);
+  isolation: isolate;
 }
 
 .hero__bg {
@@ -25,7 +26,7 @@
   z-index: var(--z-below);
 }
 
-/* ── Portrait-Hintergrund (Gold Duotone) ─────────────────── */
+/* ── Portrait-Hintergrund (A-Layout, C-Farben) ───────────── */
 
 .hero__portrait {
   position: absolute;
@@ -34,8 +35,8 @@
   height: 100%;
   width: 48%;
   object-fit: cover;
-  object-position: 38% 12%; /* Gesicht zentriert */
-  filter: grayscale(100%) sepia(55%) brightness(1.12) contrast(0.85);
+  object-position: 38% 12%;
+  filter: grayscale(20%) brightness(1.04) contrast(0.92);
   opacity: 0.22;
   -webkit-mask-image:
     linear-gradient(to right,  transparent 0%, rgba(0,0,0,0.55) 22%, black 44%, black 82%, transparent 100%),
@@ -47,7 +48,7 @@
   mask-composite: intersect;
   pointer-events: none;
   user-select: none;
-  z-index: 0; /* über bg (-1), unter content (kommt später im DOM) */
+  z-index: -1;
 }
 
 /* ── Hero-Content (explizit über Portrait) ───────────────── */
@@ -62,7 +63,6 @@
 .hero__label {
   display: block;
   margin-bottom: var(--space-6);
-  animation: fadeIn 0.6s 0.1s both;
 }
 
 /* ── Typografisches Logo ──────────────────────────────── */
@@ -71,7 +71,6 @@
   width: max-content;
   max-width: 100%;
   margin-bottom: var(--space-10);
-  animation: fadeIn 0.7s 0.2s both;
 }
 
 .hero__brand-name {
@@ -196,14 +195,12 @@
   line-height: var(--leading-loose);
   margin-bottom: var(--space-10);
   max-width: 500px;
-  animation: fadeIn 0.6s 0.4s both;
 }
 
 .hero__cta {
   display: flex;
   gap: var(--space-4);
   flex-wrap: wrap;
-  animation: fadeIn 0.6s 0.55s both;
 }
 
 @media (max-width: 900px) {
