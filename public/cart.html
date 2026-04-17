@@ -81,6 +81,11 @@
               <span id="shipping-label">—</span>
             </div>
 
+            <div class="cart-summary__shipping hidden" id="gift-fee-line">
+              <span>Geschenkkarte</span>
+              <span>1,50 €</span>
+            </div>
+
             <div class="cart-summary__total">
               <span>Gesamt</span>
               <strong id="cart-total-display"></strong>
@@ -89,6 +94,52 @@
             <p class="cart-summary__tax">Alle Preise inkl. 19 % MwSt.</p>
 
             <div class="cart-summary__shipping-note" id="shipping-note"></div>
+
+            <!-- ── Geschenk-Option ── -->
+            <div class="cart-gift">
+              <label class="cart-gift__toggle">
+                <input type="checkbox" id="gift-checkbox">
+                <span class="cart-gift__label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+                  Dies ist ein Geschenk
+                  <span class="cart-gift__price-tag">+&nbsp;1,50&nbsp;€</span>
+                </span>
+              </label>
+              <div class="cart-gift__message hidden" id="gift-message-wrap">
+
+                <!-- Für / Von -->
+                <div class="cart-gift__names">
+                  <div class="cart-gift__name-field">
+                    <label class="cart-gift__name-label" for="gift-recipient">Für</label>
+                    <input type="text" id="gift-recipient" class="cart-gift__name-input"
+                           placeholder="Name der beschenkten Person" maxlength="60">
+                  </div>
+                  <div class="cart-gift__name-field">
+                    <label class="cart-gift__name-label" for="gift-sender">Von</label>
+                    <input type="text" id="gift-sender" class="cart-gift__name-input"
+                           placeholder="Dein Name" maxlength="60">
+                  </div>
+                </div>
+
+                <textarea id="gift-message" class="cart-gift__textarea"
+                  placeholder="Deine persönliche Nachricht…"
+                  maxlength="300" rows="3" aria-label="Persönliche Geschenksnachricht"></textarea>
+                <p class="cart-gift__hint">Max. 300 Zeichen · wird als hochwertige Karte beigelegt · nicht auf der Rechnung</p>
+
+                <!-- Mini-Kartenvorschau -->
+                <div class="gift-card-preview" aria-hidden="true">
+                  <div class="gift-card-preview__label">So sieht deine Karte aus ✦</div>
+                  <div class="gift-card-preview__card">
+                    <div class="gift-card-preview__logo">MAN<span>DEA</span></div>
+                    <div class="gift-card-preview__rule"></div>
+                    <p class="gift-card-preview__greeting" id="gift-preview-greeting">Eine kleine Freude für dich ✦</p>
+                    <p class="gift-card-preview__text" id="gift-preview-text">Deine persönliche Nachricht…</p>
+                    <p class="gift-card-preview__from" id="gift-preview-from"></p>
+                    <p class="gift-card-preview__footer">Handmade with ♥</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <button class="btn btn--primary btn--lg btn--full" id="checkout-btn" aria-busy="false">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
@@ -230,10 +281,14 @@
         </article>`; }).join('');
     }
 
+    const GIFT_CARD_FEE = 150; // 1,50 €  in Cent
+
     function renderSummary(cart) {
       const total    = getCartTotal();
       const shipping = total >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-      const grandTotal = total + shipping;
+      const isGift   = document.getElementById('gift-checkbox')?.checked ?? false;
+      const giftFee  = isGift ? GIFT_CARD_FEE : 0;
+      const grandTotal = total + shipping + giftFee;
 
       // Artikel-Zeilen
       const lines = document.getElementById('summary-lines');
@@ -247,6 +302,9 @@
       // Versand
       document.getElementById('shipping-label').textContent =
         shipping === 0 ? 'Kostenlos' : formatPrice(shipping);
+
+      // Geschenkkarte-Zeile ein-/ausblenden
+      document.getElementById('gift-fee-line').classList.toggle('hidden', !isGift);
 
       // Gesamt
       document.getElementById('cart-total-display').textContent = formatPrice(grandTotal);
@@ -273,12 +331,52 @@
       }
     }
 
+    // ── Geschenk-Option ───────────────────────────────────────
+    const giftTextarea     = document.getElementById('gift-message');
+    const giftRecipientEl  = document.getElementById('gift-recipient');
+    const giftSenderEl     = document.getElementById('gift-sender');
+    const giftPreviewTxt   = document.getElementById('gift-preview-text');
+    const giftPreviewFrom  = document.getElementById('gift-preview-from');
+    const giftPreviewGreet = document.getElementById('gift-preview-greeting');
+
+    document.getElementById('gift-checkbox').addEventListener('change', e => {
+      document.getElementById('gift-message-wrap').classList.toggle('hidden', !e.target.checked);
+      renderSummary(getCart()); // Gesamtpreis mit/ohne 1,50 € neu berechnen
+    });
+
+    // Live-Vorschau der Karte
+    function updateGiftPreview() {
+      const msg       = giftTextarea.value.trim();
+      const recipient = giftRecipientEl.value.trim();
+      const sender    = giftSenderEl.value.trim();
+
+      // Anrede
+      giftPreviewGreet.textContent = recipient ? `Für ${recipient} ✦` : 'Eine kleine Freude für dich ✦';
+
+      // Nachricht
+      giftPreviewTxt.textContent   = msg || 'Deine persönliche Nachricht…';
+      giftPreviewTxt.style.fontStyle = msg ? 'italic' : 'normal';
+      giftPreviewTxt.style.color     = msg ? '' : 'var(--color-text-light)';
+
+      // Von
+      giftPreviewFrom.textContent  = sender ? `Von: ${sender}` : '';
+    }
+
+    giftTextarea.addEventListener('input',    updateGiftPreview);
+    giftRecipientEl.addEventListener('input', updateGiftPreview);
+    giftSenderEl.addEventListener('input',    updateGiftPreview);
+
     // ── Checkout ──────────────────────────────────────────────
     const checkoutBtn = document.getElementById('checkout-btn');
 
     checkoutBtn.addEventListener('click', async () => {
       const cart = getCart();
       if (cart.length === 0) return;
+
+      const isGift       = document.getElementById('gift-checkbox').checked;
+      const giftMessage   = document.getElementById('gift-message').value.trim();
+      const giftRecipient = document.getElementById('gift-recipient').value.trim();
+      const giftSender    = document.getElementById('gift-sender').value.trim();
 
       checkoutBtn.setAttribute('aria-busy', 'true');
       checkoutBtn.disabled = true;
@@ -290,7 +388,7 @@
         const res = await fetch('/.netlify/functions/create-checkout-session', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ items: cart }),
+          body:    JSON.stringify({ items: cart, isGift, giftMessage, giftRecipient, giftSender }),
         });
 
         if (!res.ok) {

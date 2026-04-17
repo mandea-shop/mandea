@@ -91,9 +91,9 @@ export const handler = async (event) => {
   const stripe = new Stripe(stripeKey, { apiVersion: '2024-04-10' });
 
   // ── Request-Body parsen ──────────────────────────────────────
-  let items;
+  let items, isGift, giftMessage, giftRecipient, giftSender;
   try {
-    ({ items } = JSON.parse(event.body ?? '{}'));
+    ({ items, isGift, giftMessage, giftRecipient, giftSender } = JSON.parse(event.body ?? '{}'));
   } catch {
     return {
       statusCode: 400,
@@ -208,6 +208,21 @@ export const handler = async (event) => {
     });
   }
 
+  // ── Geschenkkarte als Line-Item ──────────────────────────────
+  if (isGift) {
+    lineItems.push({
+      price_data: {
+        currency:     'eur',
+        unit_amount:  150, // 1,50 €
+        product_data: {
+          name:        'Geschenkkarte',
+          description: 'Hochwertige Druckkarte mit persönlicher Nachricht',
+        },
+      },
+      quantity: 1,
+    });
+  }
+
   // ── Versandkosten ────────────────────────────────────────────
   const subtotal = lineItems.reduce(
     (sum, li) => sum + li.price_data.unit_amount * li.quantity, 0
@@ -254,8 +269,12 @@ export const handler = async (event) => {
       success_url:             `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url:              `${baseUrl}/cancel.html`,
       metadata: {
-        source: 'mandea-shop',
-        items:  JSON.stringify(itemsMeta),
+        source:          'mandea-shop',
+        items:           JSON.stringify(itemsMeta),
+        is_gift:         isGift ? 'true' : 'false',
+        gift_message:    isGift && giftMessage    ? giftMessage.substring(0, 300)    : '',
+        gift_recipient:  isGift && giftRecipient  ? giftRecipient.substring(0, 60)   : '',
+        gift_sender:     isGift && giftSender     ? giftSender.substring(0, 60)      : '',
       },
     });
 

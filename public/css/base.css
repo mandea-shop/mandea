@@ -113,15 +113,15 @@ em { font-style: italic; }
 
 /* Section-Abstände */
 .section {
-  padding-block: var(--space-20);
-}
-
-.section--sm {
   padding-block: var(--space-12);
 }
 
+.section--sm {
+  padding-block: var(--space-8);
+}
+
 .section--lg {
-  padding-block: var(--space-32);
+  padding-block: var(--space-20);
 }
 
 /* Visually hidden (für Barrierefreiheit) */

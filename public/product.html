@@ -24,7 +24,7 @@
   <title>Produkt — Mandea</title>
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/main.css?v=1">
-  <link rel="stylesheet" href="/css/product.css?v=1">
+  <link rel="stylesheet" href="/css/product.css?v=2">
 </head>
 <body>
 
@@ -143,9 +143,77 @@
 
             <!-- Größen-Selektor (nur bei Varianten) -->
             <div class="product-detail__sizes hidden" id="size-selector-wrap">
-              <label class="form-label">Größe wählen</label>
+              <div class="product-detail__size-header">
+                <label class="form-label">Größe wählen</label>
+                <button type="button" class="size-guide-trigger" id="size-guide-btn" aria-haspopup="dialog">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Wie messe ich meine Größe?
+                </button>
+              </div>
               <div class="size-selector" id="size-selector" role="group" aria-label="Größe wählen"></div>
               <p class="product-detail__size-hint hidden" id="size-hint">Bitte wähle zuerst eine Größe.</p>
+            </div>
+
+            <!-- Größen-Modal -->
+            <div class="size-guide-modal hidden" id="size-guide-modal" role="dialog" aria-modal="true" aria-labelledby="size-guide-title">
+              <div class="size-guide-modal__backdrop" id="size-guide-backdrop"></div>
+              <div class="size-guide-modal__box">
+                <div class="size-guide-modal__header">
+                  <h3 id="size-guide-title">Größen-Messanleitung</h3>
+                  <button class="size-guide-modal__close" id="size-guide-close" aria-label="Schließen">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+                <div class="size-guide-modal__body">
+
+                  <!-- Ringe -->
+                  <div class="size-guide-section">
+                    <h4 class="size-guide-section__title">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+                      Ringgröße messen
+                    </h4>
+                    <ol class="size-guide-steps">
+                      <li>Schneide einen schmalen Papierstreifen ab (ca. 0,5 cm breit, 10 cm lang).</li>
+                      <li>Lege ihn eng um die <strong>Basis des gewünschten Fingers</strong>.</li>
+                      <li>Markiere die Stelle, wo sich der Streifen überlappt.</li>
+                      <li>Miss den Abstand in Millimetern — das ist dein Umfang und gleichzeitig deine Ringgröße.</li>
+                    </ol>
+                    <p class="size-guide-tip">💡 Am besten abends messen — Finger sind dann etwas dicker.</p>
+                    <table class="size-guide-table">
+                      <thead><tr><th>Umfang (mm)</th><th>Ringgröße</th><th>Durchmesser</th></tr></thead>
+                      <tbody>
+                        <tr><td>47 mm</td><td>47</td><td>15,0 mm</td></tr>
+                        <tr><td>49 mm</td><td>49</td><td>15,6 mm</td></tr>
+                        <tr><td>51 mm</td><td>51</td><td>16,2 mm</td></tr>
+                        <tr><td>52 mm</td><td>52</td><td>16,6 mm</td></tr>
+                        <tr><td>54 mm</td><td>54</td><td>17,2 mm</td></tr>
+                        <tr><td>56 mm</td><td>56</td><td>17,8 mm</td></tr>
+                        <tr><td>58 mm</td><td>58</td><td>18,5 mm</td></tr>
+                        <tr><td>60 mm</td><td>60</td><td>19,1 mm</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Armbänder -->
+                  <div class="size-guide-section">
+                    <h4 class="size-guide-section__title">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M4 12a8 8 0 0 0 16 0"/><circle cx="12" cy="4" r="1"/><circle cx="12" cy="20" r="1"/></svg>
+                      Armbandgröße messen
+                    </h4>
+                    <ol class="size-guide-steps">
+                      <li>Miss den Umfang deines Handgelenks mit einem Maßband oder Papierstreifen.</li>
+                      <li>Für <strong>engen Sitz</strong>: Handgelenkumfang + 1 cm</li>
+                      <li>Für <strong>normalen Sitz</strong>: Handgelenkumfang + 1,5–2 cm</li>
+                    </ol>
+                    <p class="size-guide-tip">💡 Unsicher? Bei individuellen Anfragen helfe ich dir gerne persönlich weiter — schreib mich einfach an!</p>
+                  </div>
+
+                </div>
+                <div class="size-guide-modal__footer">
+                  <a href="/contact.html" class="btn btn--ghost btn--sm">Frage stellen →</a>
+                  <button class="btn btn--primary btn--sm" id="size-guide-close-btn">Verstanden</button>
+                </div>
+              </div>
             </div>
 
             <!-- Lagerbestand-Hinweis -->
@@ -335,6 +403,14 @@
         });
         document.head.appendChild(schema);
 
+        // Zuletzt angesehen in localStorage speichern
+        try {
+          const key    = 'mandea_recently_viewed';
+          const viewed = JSON.parse(localStorage.getItem(key) ?? '[]').filter(i => i !== product.id);
+          viewed.unshift(product.id);
+          localStorage.setItem(key, JSON.stringify(viewed.slice(0, 6)));
+        } catch {}
+
         // Breadcrumb
         document.getElementById('breadcrumb-category').textContent = product.categoryLabel;
         document.getElementById('breadcrumb-name').textContent = product.name;
@@ -513,6 +589,38 @@
         console.error(err);
       }
     }
+
+    // ── Größen-Modal ──────────────────────────────────────
+    (function () {
+      const modal    = document.getElementById('size-guide-modal');
+      const backdrop = document.getElementById('size-guide-backdrop');
+      const openBtn  = document.getElementById('size-guide-btn');
+      const closeBtn = document.getElementById('size-guide-close');
+      const closeBtnBottom = document.getElementById('size-guide-close-btn');
+
+      function openModal() {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      }
+
+      function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        openBtn.focus();
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      closeBtnBottom.addEventListener('click', closeModal);
+      backdrop.addEventListener('click', closeModal);
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+    })();
 
     init();
   </script>

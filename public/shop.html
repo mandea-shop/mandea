@@ -90,11 +90,24 @@
     <section class="shop-layout section" aria-label="Produktübersicht">
       <div class="container">
 
+        <!-- Zuletzt angesehen -->
+        <div class="recently-viewed hidden" id="recently-viewed">
+          <h3 class="recently-viewed__heading">Zuletzt angesehen</h3>
+          <div class="recently-viewed__grid" id="recently-viewed-grid"></div>
+        </div>
+
         <!-- Filter-Leiste -->
         <div class="shop-toolbar" role="toolbar" aria-label="Filter und Sortierung">
           <div class="filter-tabs" role="group" aria-label="Kategorien filtern" id="filter-tabs">
             <button class="filter-tab active" data-category="alle">Alle</button>
             <!-- weitere Tabs werden per JS aus categories.json geladen -->
+          </div>
+
+          <div class="price-filter-tabs" role="group" aria-label="Preis filtern">
+            <button class="filter-tab active" data-price="alle">Alle Preise</button>
+            <button class="filter-tab" data-price="unter-30">Unter 30 €</button>
+            <button class="filter-tab" data-price="30-60">30 – 60 €</button>
+            <button class="filter-tab" data-price="ueber-60">Über 60 €</button>
           </div>
 
           <div class="shop-toolbar__right">
@@ -179,8 +192,9 @@
 
     // ── Zustand ──────────────────────────────────────────────
     let allProducts = [];
-    let activeCategory = 'alle';
-    let activeSort = 'default';
+    let activeCategory  = 'alle';
+    let activeSort      = 'default';
+    let activePriceFilter = 'alle';
 
     // ── URL-Parameter lesen (z.B. ?kategorie=ohrringe) ───────
     const params = new URLSearchParams(window.location.search);
@@ -224,6 +238,12 @@
       let list = activeCategory === 'alle'
         ? allProducts
         : allProducts.filter(p => p.category === activeCategory);
+
+      switch (activePriceFilter) {
+        case 'unter-30': list = list.filter(p => p.price < 3000);              break;
+        case '30-60':    list = list.filter(p => p.price >= 3000 && p.price <= 6000); break;
+        case 'ueber-60': list = list.filter(p => p.price > 6000);              break;
+      }
 
       switch (activeSort) {
         case 'price-asc':  list = [...list].sort((a, b) => a.price - b.price); break;
@@ -326,6 +346,17 @@
       history.replaceState(null, '', url);
     });
 
+    // ── Preis-Filter ──────────────────────────────────────────
+    document.querySelectorAll('.price-filter-tabs .filter-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activePriceFilter = btn.dataset.price;
+        document.querySelectorAll('.price-filter-tabs .filter-tab').forEach(b =>
+          b.classList.toggle('active', b === btn)
+        );
+        render();
+      });
+    });
+
     // ── Sortierung ────────────────────────────────────────────
     document.getElementById('sort-select').addEventListener('change', e => {
       activeSort = e.target.value;
@@ -362,6 +393,28 @@
         }
 
         render();
+
+        // ── Zuletzt angesehen ─────────────────────────────────
+        try {
+          const ids     = JSON.parse(localStorage.getItem('mandea_recently_viewed') ?? '[]');
+          const recent  = ids.map(id => allProducts.find(p => p.id === id)).filter(Boolean).slice(0, 4);
+          const wrap    = document.getElementById('recently-viewed');
+          const grid    = document.getElementById('recently-viewed-grid');
+          if (recent.length > 0) {
+            grid.innerHTML = recent.map(p => `
+              <a href="/product.html?id=${p.id}" class="recently-viewed__item">
+                <div class="recently-viewed__img">
+                  ${p.images?.[0]
+                    ? `<img src="${p.images[0]}" alt="${p.name}" loading="lazy">`
+                    : `<div class="img-placeholder" style="height:100%"></div>`}
+                </div>
+                <p class="recently-viewed__name">${p.name}</p>
+                <p class="recently-viewed__price">${formatPrice(p.price)}</p>
+              </a>`).join('');
+            wrap.classList.remove('hidden');
+          }
+        } catch {}
+
       } catch (err) {
         document.getElementById('shop-grid').innerHTML =
           `<p style="grid-column:1/-1;text-align:center;color:var(--color-text-light);padding:var(--space-12)">Produkte konnten nicht geladen werden.</p>`;

@@ -782,3 +782,210 @@
   .admin-product-row__badges { display: none; }
   .admin-product-row__actions { grid-column: 2; }
 }
+
+/* ============================================================
+   MANDEA — Geschenkkarte (Admin-Tab)
+   ============================================================ */
+
+/* ── Layout ──────────────────────────────────────────────── */
+
+.giftcard-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: var(--space-10);
+  align-items: start;
+}
+
+.giftcard-textarea {
+  resize: vertical;
+  font-family: var(--font-body);
+  line-height: var(--leading-loose);
+}
+
+.giftcard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+/* ── Vorschau-Wrapper ────────────────────────────────────── */
+
+.giftcard-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.giftcard-preview-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-text-light);
+}
+
+.giftcard-preview-hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-light);
+  line-height: var(--leading-normal);
+}
+
+/* ── Die Karte selbst (A6 quer = 148 × 105 mm) ───────────── */
+
+.giftcard {
+  position: relative;
+  width: 148mm;
+  min-height: 105mm;
+  background: #FFFCF8;
+  border: 1px solid var(--color-border);
+  border-radius: 4mm;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+.giftcard__inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 7mm 9mm;
+  gap: 3mm;
+  text-align: center;
+}
+
+/* Dekor-Ecken */
+.giftcard__corner {
+  position: absolute;
+  width: 14mm;
+  height: 14mm;
+  pointer-events: none;
+}
+.giftcard__corner::before,
+.giftcard__corner::after {
+  content: '';
+  position: absolute;
+  background: #B89A6A;
+}
+.giftcard__corner::before { width: 1px; height: 100%; }
+.giftcard__corner::after  { width: 100%; height: 1px; }
+.giftcard__corner--tl { top: 4mm; left: 4mm; }
+.giftcard__corner--tr { top: 4mm; right: 4mm; transform: scaleX(-1); }
+.giftcard__corner--bl { bottom: 4mm; left: 4mm; transform: scaleY(-1); }
+.giftcard__corner--br { bottom: 4mm; right: 4mm; transform: scale(-1); }
+
+/* Logo */
+.giftcard__logo {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 13pt;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  color: #2D2520;
+  line-height: 1;
+}
+.giftcard__logo span { color: #B89A6A; }
+
+/* Goldene Trennlinie */
+.giftcard__rule {
+  width: 28mm;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #B89A6A, transparent);
+}
+
+/* Anrede */
+.giftcard__greeting {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 8pt;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #B89A6A;
+  margin: 0;
+}
+
+/* Nachricht */
+.giftcard__message {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 11pt;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #2D2520;
+  max-width: 110mm;
+  margin: 0;
+  word-break: break-word;
+}
+
+/* Von + Produkt */
+.giftcard__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1mm;
+}
+
+.giftcard__from,
+.giftcard__product {
+  font-family: 'Jost', sans-serif;
+  font-size: 7.5pt;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #7A6555;
+}
+
+.giftcard__product {
+  color: #B89A6A;
+  font-size: 7pt;
+}
+
+/* Footer */
+.giftcard__footer {
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+  font-family: 'Jost', sans-serif;
+  font-size: 6.5pt;
+  letter-spacing: 0.10em;
+  color: #B8A898;
+  text-transform: uppercase;
+  margin-top: 1mm;
+}
+
+/* ── @media print ────────────────────────────────────────── */
+
+@media print {
+  @page {
+    size: 148mm 105mm landscape;
+    margin: 0;
+  }
+
+  /* Alles ausblenden */
+  body * { visibility: hidden; }
+
+  /* Nur die Karte anzeigen */
+  .giftcard,
+  .giftcard * { visibility: visible; }
+
+  .giftcard {
+    position: fixed;
+    inset: 0;
+    width: 148mm;
+    height: 105mm;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    top: 0;
+    left: 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .giftcard-layout {
+    grid-template-columns: 1fr;
+  }
+}
